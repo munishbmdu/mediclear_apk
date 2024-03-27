@@ -11,6 +11,7 @@ import 'package:mediclear_labs/screens/hearing_test/screens/history_page.dart';
 import 'package:mediclear_labs/screens/hearing_test/screens/home_screen.dart';
 import 'package:mediclear_labs/screens/hearing_test/screens/view.dart';
 import 'package:mediclear_labs/screens/hearing_test/widgets/graph.dart';
+import 'package:mediclear_labs/screens/login_page/login_toggle_button.dart';
 
 import 'package:mediclear_labs/screens/splash_screen/splash_screen.dart';
 import 'package:mediclear_labs/widgets/drawer/test_history.dart';

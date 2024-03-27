@@ -1,10 +1,240 @@
+import 'dart:convert';
+import 'dart:math';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../../constants/api_domain.dart';
+import '../../hearing_test/screens/vertigo_test.dart';
+
+class ImageGuessing extends StatefulWidget {
+  ImageGuessing({required this.medical_id});
+  final String medical_id;
+
+  @override
+  _ImageGuessingState createState() => _ImageGuessingState();
+}
+
+class _ImageGuessingState extends State<ImageGuessing> {
+  List<Map<String, String>> imageList = [
+    {'image': 'assets/img_42.png', 'number': '42'},
+    {'image': 'assets/color_blindness.png', 'number': '74'},
+    {'image': 'assets/img_12.png', 'number': '12'},
+    {'image': 'assets/img_2.png', 'number': '2'},
+    {'image': 'assets/img_6.png', 'number': '6'},
+    {'image': 'assets/img_27.png', 'number': '27'},
+    {'image': 'assets/img_5.jpg', 'number': '5'},
+    {'image': 'assets/img_9.png', 'number': '9'},
+    {'image': 'assets/img_10.jpg', 'number': '10'},
+    {'image': 'assets/eye_blindness3.png', 'number': '42'}
+  ];
+
+  String currentImage = '';
+  String correctAnswer = ''; // Number associated with the current image
+  int result = 0;
+  int counter = 0;
+
+  List<String> buttonNumbers = [];
+  List<bool> resultant = [];
+
+  @override
+  void initState() {
+    super.initState();
+    setRandomImage();
+    print(result);
+  }
+
+  Future getEyeTest(Object object) async {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    var token = pref.getString("token");
+    final response = await http.post(
+      Uri.parse("${ApiDomain().url}eyecheckup"),
+      body: jsonEncode(object),
+      headers: ({
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $token'
+      }),
+    );
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              content: Container(
+                height: 200,
+                child: Column(
+                  children: [
+                    Image.asset("assets/eye_icon2.png"),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                      "Hurrah!!, Eye Test done sucessFully",
+                    )
+                  ],
+                ),
+              ),
+            );
+          });
+    } else {
+      var data = jsonDecode(response.body);
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              content: Container(
+                height: 200,
+                child: Column(
+                  children: [
+                    Image.asset("assets/eye_icon2.png"),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                      "Test Failed",
+                    )
+                  ],
+                ),
+              ),
+            );
+          });
+    }
+  }
+
+  void getResultScreen() {
+    var value = {
+      'medical_details_id': widget.medical_id,
+      'test_type_id': 1,
+      // Assuming 'results' is the key to store the result
+    };
+    getEyeTest(value);
+    // Navigate to the next screen after some delay
+    Future.delayed(Duration(seconds: 5), () {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) => VertigoTest(
+                  id: widget.medical_id,
+                )),
+      );
+    });
+  }
+
+  void setRandomImage() {
+    // Get a random image from the list
+    Random random = Random();
+    int randomNumber = random.nextInt(imageList.length);
+
+    // Set the current image and its associated number
+    setState(() {
+      currentImage = imageList[randomNumber]['image']!;
+      correctAnswer = imageList[randomNumber]['number']!;
+    });
+
+    // Create a list of three random numbers
+    List<String> randomNumbers = [];
+    for (int i = 0; i < 3; i++) {
+      int randIndex = random.nextInt(imageList.length);
+      randomNumbers.add(imageList[randIndex]['number']!);
+    }
+
+    // Shuffle the random numbers list
+    randomNumbers.shuffle();
+
+    // Ensure one of the random numbers matches the correct answer
+    if (!randomNumbers.contains(correctAnswer)) {
+      randomNumbers[random.nextInt(3)] = correctAnswer;
+    }
+
+    setState(() {
+      buttonNumbers = randomNumbers;
+    });
+  }
+
+  void checkGuess(String guess) {
+    // Check if the guessed number matches the correct answer
+    setState(() {
+      result = (guess == correctAnswer) ? 1 : 2;
+      resultant.add(guess == correctAnswer);
+    });
+    print("Nav" + resultant.toString());
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Eye Testing Screen'),
+      ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Image.asset(
+            currentImage,
+            height: 200,
+            width: 200,
+          ),
+          SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              for (int i = 0; i < 3; i++)
+                ElevatedButton(
+                  onPressed: () {
+                    // Check if the guess is correct
+                    checkGuess(buttonNumbers[i]);
+                    // Set a new random image and buttons
+                    setRandomImage();
+                    // Reset the result
+                    setState(() {
+                      result = 0;
+                    });
+                    // Increment counter
+                    counter++;
+                    // Check if this is the last question
+                    if (counter == 10) {
+                      getResultScreen();
+                    }
+                  },
+                  child: Text(buttonNumbers[i]),
+                ),
+            ],
+          ),
+          SizedBox(height: 20),
+          Text(
+            result == 1
+                ? 'Correct Guess!'
+                : result == 2
+                    ? 'Incorrect Guess.'
+                    : "Please select correct option",
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class NextScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Next Screen'),
+      ),
+      body: Center(
+        child: Text('This is the next screen.'),
+      ),
+    );
+  }
+}
+
 // import 'package:flutter/material.dart';
 // import 'package:google_fonts/google_fonts.dart';
 // import 'package:mediclear_labs/constants/colors.dart';
 // import 'package:mediclear_labs/screens/hearing_test/screens/vertigo_test.dart';
 // import 'package:mediclear_labs/screens/login_page/login_page1.dart';
-
-
 
 // class EyeTestScreen3 extends StatefulWidget {
 //    EyeTestScreen3({super.key,required this.question_no,required this.image});
@@ -20,11 +250,11 @@
 //   Widget build(BuildContext context) {
 //     return EyeTest(context, 1,"assets/color_blindness.png", (){
 //      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (ctx)=>EyeTestScreen4()));
-                      
+
 //     },
 //     (){
 //       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (ctx)=>EyeTestScreen4()));
-                      
+
 //     }
 //     );
 //   }
@@ -41,13 +271,12 @@
 //   @override
 //   Widget build(BuildContext context) {
 //     return EyeTest(context, 1,"assets/eye_blindness3.png", (){
-//       Navigator.push(context, MaterialPageRoute(builder:(context) => VertigoTest(val1: 2,),)); 
+//       Navigator.push(context, MaterialPageRoute(builder:(context) => VertigoTest(val1: 2,),));
 //     },(){
-//       Navigator.push(context, MaterialPageRoute(builder:(context) => VertigoTest(val1: 2,),)); 
+//       Navigator.push(context, MaterialPageRoute(builder:(context) => VertigoTest(val1: 2,),));
 //     });
 //   }
 // }
-
 
 // Widget EyeTest(context, int question_no,String image, final  Function()? onpressed, final  Function()? ontap)
 // {
@@ -61,7 +290,7 @@
 //       ),
 //       body: Column(
 //         mainAxisAlignment: MainAxisAlignment.spaceAround,
-        
+
 //         children: [
 //           Center(child: Text("What do you see in this image?",style: GoogleFonts.poppins(),)),
 //           CircleAvatar(
@@ -90,7 +319,7 @@
 //                 backgroundColor:Colors.grey.shade400,
 //                 child: Text("6"),
 //               ),
-             
+
 //             ],
 //           ),
 //            Container(
@@ -98,7 +327,7 @@
 //                 child: ElevatedButton(onPressed:onpressed,
 //                 style: ElevatedButton.styleFrom(
 //                   backgroundColor: Coloors.fontcolor
-//                 ), 
+//                 ),
 //                 child: Text("Next",style: GoogleFonts.poppins(),)),
 //               )
 
@@ -106,7 +335,6 @@
 //       ),
 //     );
 // }
-
 
 // class FinalEyeTestScreen extends StatelessWidget {
 //   const FinalEyeTestScreen({super.key});
@@ -122,16 +350,15 @@
 //       body: Column(
 //         crossAxisAlignment: CrossAxisAlignment.center,
 //         mainAxisAlignment: MainAxisAlignment.start,
-        
+
 //         children: [
 //           Padding(
 //             padding: const EdgeInsets.only(top: 100),
 //             child: Container(
 //               height: 110,
-             
+
 //             child: Center(child: Image.asset("assets/eye_icon3.png"))),
 
-          
 //           ),
 //           SizedBox(
 //             height: 70,
@@ -139,7 +366,7 @@
 //           CircleAvatar(
 //             backgroundColor: Colors.grey.shade200,
 //                radius: 70,
-               
+
 //             child: Text("90%",style: GoogleFonts.poppins(fontSize: 20),),
 //           ),
 //           SizedBox(
@@ -153,361 +380,360 @@
 //     );
 //   }
 // }
-  // List<String> originalImageList = [
-  //   'assets/img_42.png',
-  //   'assets/color_blindness.png',
-  //   'assets/img_12.png',
-  //   'assets/img_2.png',
-  //    'assets/img_6.png',
-  //    'assets/img_27.png'
-  //    ''
-  // ];
-  // List<int> buttonNumbers = [0, 1, 2, 3, 4, 5];
-  // List<int> realButtonNumbers = [42, 74, 12, 2, 6, 27]; //
+// List<String> originalImageList = [
+//   'assets/img_42.png',
+//   'assets/color_blindness.png',
+//   'assets/img_12.png',
+//   'assets/img_2.png',
+//    'assets/img_6.png',
+//    'assets/img_27.png'
+//    ''
+// ];
+// List<int> buttonNumbers = [0, 1, 2, 3, 4, 5];
+// List<int> realButtonNumbers = [42, 74, 12, 2, 6, 27]; //
 
+// import 'dart:convert';
+// import 'dart:math';
+// import 'package:flutter/material.dart';
+// import 'package:get/get.dart';
+// import 'package:mediclear_labs/constants/api_domain.dart';
+// import 'package:mediclear_labs/screens/hearing_test/screens/vertigo_test.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:http/http.dart' as http;
 
-import 'dart:convert';
-import 'dart:math';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:mediclear_labs/constants/api_domain.dart';
-import 'package:mediclear_labs/screens/hearing_test/screens/vertigo_test.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
+// class ImageGuessingScreen extends StatefulWidget {
+//   ImageGuessingScreen({required this.medical_id});
+//   String medical_id;
+//   @override
+//   _ImageGuessingScreenState createState() => _ImageGuessingScreenState();
+// }
 
-class ImageGuessingScreen extends StatefulWidget {
-  ImageGuessingScreen({required this.medical_id});
-  String medical_id;
-  @override
-  _ImageGuessingScreenState createState() => _ImageGuessingScreenState();
-}
+// class _ImageGuessingScreenState extends State<ImageGuessingScreen> {
+//   List<String> imageList = [
+//     'assets/img_42.png',
+//     'assets/color_blindness.png',
+//     'assets/img_12.png',
+//     'assets/img_2.png',
+//     'assets/img_6.png',
+//     'assets/img_27.png'
+//   ];
 
-class _ImageGuessingScreenState extends State<ImageGuessingScreen> {
-  List<String> imageList = [
-    'assets/img_42.png',
-    'assets/color_blindness.png',
-    'assets/img_12.png',
-    'assets/img_2.png',
-    'assets/img_6.png',
-    'assets/img_27.png'
-  ];
+//   String currentImage = '';
+//   int correctAnswer = 0; // Index of the correct answer
+//   int result = 0;
+//   int counter = 0;
 
-  String currentImage = '';
-  int correctAnswer = 0; // Index of the correct answer
-  int result=0;
-  int counter=0;
-  
+//   List<int> buttonNumbers = [];
+//   List<int> realbuttonNumbers = [42, 74, 12, 2, 6, 27];
+//   List<bool> resultant = [];
 
-  List<int> buttonNumbers = [];
-  List<int> realbuttonNumbers = [42, 74, 12, 2, 6, 27];
-  List<bool> resultant=[];
+//   @override
+//   void initState() {
+//     super.initState();
+//     // Call the function to set a random image initially
+//     setRandomImage();
+//     print(result);
+//   }
 
-  @override
-  void initState() {
-    super.initState();
-    // Call the function to set a random image initially
-    setRandomImage();
-    print(result);
-  }
-   Future getEyeTest(Object object)async {
+//   Future getEyeTest(Object object) async {
+//     final SharedPreferences pref = await SharedPreferences.getInstance();
+//     var token = pref.getString("token");
+//     final response = await http.post(
+//       Uri.parse("${ApiDomain().url}eyecheckup"),
+//       body: jsonEncode(object),
+//       headers: ({
+//         'Content-Type': 'application/json; charset=UTF-8',
+//         'Authorization': 'Bearer $token'
+//       }),
+//     );
+//     if (response.statusCode == 200) {
+//       var data = jsonDecode(response.body);
+//       showDialog(
+//           context: context,
+//           builder: (context) {
+//             return AlertDialog(
+//               content: Container(
+//                 height: 200,
+//                 child: Column(
+//                   children: [
+//                     Image.asset("assets/eye_icon2.png"),
+//                     SizedBox(
+//                       height: 20,
+//                     ),
+//                     Text(
+//                       "Hurrah!!, Eye Test done sucessFully",
+//                     )
+//                   ],
+//                 ),
+//               ),
+//             );
+//           });
+//     } else {
+//       var data = jsonDecode(response.body);
+//       showDialog(
+//           context: context,
+//           builder: (context) {
+//             return AlertDialog(
+//               content: Container(
+//                 height: 200,
+//                 child: Column(
+//                   children: [
+//                     Image.asset("assets/eye_icon2.png"),
+//                     SizedBox(
+//                       height: 20,
+//                     ),
+//                     Text(
+//                       "Test Failed",
+//                     )
+//                   ],
+//                 ),
+//               ),
+//             );
+//           });
+//     }
+//   }
 
-      final SharedPreferences pref= await SharedPreferences.getInstance();
-    var token=pref.getString("token");
-    final response=await http.post(Uri.parse("${ApiDomain().url}eyecheckup"),
-    body: jsonEncode(object),
-    headers: ({
-     'Content-Type': 'application/json; charset=UTF-8',
-      'Authorization': 'Bearer $token' 
-    }),
-    );
-    if(response.statusCode==200)
-    {
-      var data=jsonDecode(response.body);
-       showDialog(context: context, builder:(context){
-      return AlertDialog(
-        content: Container(
-          height: 200,
-          child: Column(
-            children: [
-              Image.asset("assets/eye_icon2.png"),
-              SizedBox(height: 20,),
-              Text("Hurrah!!, Eye Test done sucessFully",)
-            ],
-          ),
-        ),
-      );
-    });
-    }
-      else
-    {
-      var data=jsonDecode(response.body);
-       showDialog(context: context, builder:(context){
-      return AlertDialog(
-        content: Container(
-          height: 200,
-          child: Column(
-            children: [
-              Image.asset("assets/eye_icon2.png"),
-              SizedBox(height: 20,),
-              Text("Test Failed",)
-            ],
-          ),
-        ),
-      );
-    });
-    }
-    
-    
-  }
+//   void getResultScreen() {
+//     var q1, q2, q3, q4, q5, q6;
+//     q1 = resultant[0];
+//     q2 = resultant[1];
+//     q3 = resultant[2];
+//     q4 = resultant[3];
+//     q5 = resultant[4];
+//     q6 = resultant[5];
+//     var value = {
+//       'q1': q1,
+//       'q2': q2,
+//       'q3': q3,
+//       'q4': q4,
+//       'q5': q5,
+//       'q6': q6,
+//       'medical_details_id': widget.medical_id,
+//       'test_type_id': 1
+//     };
+//     getEyeTest(value);
+//     Future.delayed(Duration(seconds: 5), () {
+//       Navigator.pushReplacement(
+//           context,
+//           MaterialPageRoute(
+//               builder: (context) => VertigoTest(
+//                     id: widget.medical_id,
+//                   )));
+//     });
+//   }
 
-  void getResultScreen(){
-    var q1,q2,q3,q4,q5,q6;
-    q1=resultant[0];
-    q2=resultant[1];
-    q3=resultant[2];
-    q4=resultant[3];
-    q5=resultant[4];
-    q6=resultant[5];
-    var value={
-    'q1':q1,
-    'q2':q2,
-    'q3':q3,
-    'q4':q4,
-    'q5':q5,
-    'q6':q6,
-    'medical_details_id':widget.medical_id,
-    'test_type_id':1
-    };
-    getEyeTest(value);
-    Future.delayed(Duration(seconds: 5),(){
-     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>VertigoTest(id: widget.medical_id,)));
-    });
-   
-  }
-  void setRandomImage() {
-    // Get a random image from the list
-    Random random = Random();
-    int randomNumber = random.nextInt(imageList.length);
-    
-    // Create a list of numbers from 0 to 5 (for 6 buttons)
-    buttonNumbers = List<int>.generate(6, (index) => index);
-    print(buttonNumbers);
-    
-    // Shuffle the button numbers list
-    buttonNumbers.shuffle();
+//   void setRandomImage() {
+//     // Get a random image from the list
+//     Random random = Random();
+//     int randomNumber = random.nextInt(imageList.length);
 
-    setState(() {
-      currentImage = imageList[randomNumber];
-      // Choose one index as the correct answer
-      correctAnswer = randomNumber; // Randomly choose 0, 1, or 2
-    });
-  }
+//     // Create a list of numbers from 0 to 5 (for 6 buttons)
+//     buttonNumbers = List<int>.generate(6, (index) => index);
+//     print("Goldy" + buttonNumbers.toString());
 
-  void checkGuess(int guess) {
-    // Check if the guessed index matches the correct answer
-    setState(() {
-      result = (guess == correctAnswer)?1:2;
-      resultant.add(guess == correctAnswer);
-      print(resultant);
-    });
-  }
+//     // Shuffle the button numbers list
+//     buttonNumbers.shuffle();
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Eye Testing Screen'),
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Image.asset(
-            currentImage,
-            height: 200,
-            width: 200,
-          ),
-          // SizedBox(height: 20),
-          // ElevatedButton(
-          //   onPressed: () {
-          //     // Set a new random image
-          //     setRandomImage();
-          //     // Reset the result
-          //     setState(() {
-          //       result = 0;
-          //     });
-          //   },
-          //   child: Text('Get New Image'),
-          // ),
-          SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  // Check if the guess is correct
-                     // Set a new random image
-              
-                  checkGuess(buttonNumbers[0]);
-                     // Set a new random image
-                     
-                     if(counter==5){
-                    
-                      getResultScreen();
-                     }
-                     counter++;
-                print(counter);
-              setRandomImage();
-              // Reset the result
-              setState(() {
-               
-                result = 0;
-                
-                
-              });
-              
-                },
-                child: Text('${realbuttonNumbers[buttonNumbers[0]]}'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  // Check if the guess is correct
-                     // Set a new random image
-              
-                  checkGuess(buttonNumbers[1]);
-                     // Set a new random image
-                      if(counter==5){
-                       
-                      getResultScreen();
-                     }
-                  counter++;
-                print(counter);
-              setRandomImage();
-              // Reset the result
-          
-              setState(() {
-                result = 0;
-               
-              });
-                },
-                child: Text('${realbuttonNumbers[buttonNumbers[1]]}'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  // Check if the guess is correct
-                     // Set a new random image
-              
-                  checkGuess(buttonNumbers[2]);
-                     // Set a new random image
-                     if(counter==5){
-                      getResultScreen();
-                     } 
-                     counter++;
-                print(counter);
-              setRandomImage();
-              // Reset the result
-              setState(() {
-                
-                result = 0;
-               
-              });
-                },
-                child: Text('${realbuttonNumbers[buttonNumbers[2]]}'),
-              ),
-            ],
-          ),
-          SizedBox(height: 20,),
-            Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  // Check if the guess is correct
- 
-                  checkGuess(buttonNumbers[3]);
-                   
-                     // Set a new random image
-                      if(counter==5){
-                      getResultScreen();
-                     }
-                     counter++;
-                print(counter);
-              setRandomImage();
-              // Reset the result
+//     setState(() {
+//       currentImage = imageList[randomNumber];
+//       // Choose one index as the correct answer
+//       correctAnswer = randomNumber; // Randomly choose 0, 1, or 2
+//     });
+//   }
 
-              setState(() {
-               
-                result = 0;
-                
-              });
-                },
-                child: Text('${realbuttonNumbers[buttonNumbers[3]]}'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  // Check if the guess is correct
- 
-                  checkGuess(buttonNumbers[4]);
-                    if(counter==5){
-                      getResultScreen();
-                     }
-                     counter++;
-                print(counter);
-                  setRandomImage();
+//   void checkGuess(int guess) {
+//     // Check if the guessed index matches the correct answer
+//     setState(() {
+//       result = (guess == correctAnswer) ? 1 : 2;
+//       resultant.add(guess == correctAnswer);
+//       print("Nav" + resultant.toString());
+//     });
+//   }
 
-              // Reset the result
-              setState(() {
-              
-                result = 0;
-                
-              });
-                  
-                },
-                child: Text('${realbuttonNumbers[buttonNumbers[4]]}'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                 // Check if the guess is correct
-                  checkGuess(buttonNumbers[5]);
-                 if(counter==5){
-                      getResultScreen();
-                     }
-                     counter++;
-                print(counter);
-                  setRandomImage();
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text('Eye Testing Screen'),
+//       ),
+//       body: Column(
+//         mainAxisAlignment: MainAxisAlignment.center,
+//         crossAxisAlignment: CrossAxisAlignment.center,
+//         children: [
+//           Image.asset(
+//             currentImage,
+//             height: 200,
+//             width: 200,
+//           ),
+//           // SizedBox(height: 20),
+//           // ElevatedButton(
+//           //   onPressed: () {
+//           //     // Set a new random image
+//           //     setRandomImage();
+//           //     // Reset the result
+//           //     setState(() {
+//           //       result = 0;
+//           //     });
+//           //   },
+//           //   child: Text('Get New Image'),
+//           // ),
+//           SizedBox(height: 20),
+//           Row(
+//             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//             children: [
+//               ElevatedButton(
+//                 onPressed: () {
+//                   // Check if the guess is correct
+//                   // Set a new random image
 
-              // Reset the result
-              setState(() {
-                  
-                result = 0;
-                
-              });
-                },
-                child: Text('${realbuttonNumbers[buttonNumbers[5]]}'),
-              ),
-            ],
-          ),
-          SizedBox(height: 20),
+//                   checkGuess(buttonNumbers[0]);
+//                   // Set a new random image
 
-          Text(result==1 ? 'Correct Guess!' : result==2? 'Incorrect Guess.':"Please select correct option"),
+//                   if (counter == 5) {
+//                     getResultScreen();
+//                   }
+//                   counter++;
+//                   print("Bdmu"+counter.toString());
+//                   setRandomImage();
+//                   // Reset the result
+//                   setState(() {
+//                     result = 0;
+//                   });
+//                 },
+//                 child: Text('${realbuttonNumbers[buttonNumbers[0]]}'),
+//               ),
+//               ElevatedButton(
+//                 onPressed: () {
+//                   // Check if the guess is correct
+//                   // Set a new random image
 
-        ],
-      ),
-    );
-  }
+//                   checkGuess(buttonNumbers[1]);
+//                   // Set a new random image
+//                   if (counter == 5) {
+//                     getResultScreen();
+//                   }
+//                   counter++;
+//                   print(counter);
+//                   setRandomImage();
+//                   // Reset the result
 
-}
+//                   setState(() {
+//                     result = 0;
+//                   });
+//                 },
+//                 child: Text('${realbuttonNumbers[buttonNumbers[1]]}'),
+//               ),
+//               ElevatedButton(
+//                 onPressed: () {
+//                   // Check if the guess is correct
+//                   // Set a new random image
 
-class ResultSCreen extends StatefulWidget {
-  const ResultSCreen({super.key});
+//                   checkGuess(buttonNumbers[2]);
+//                   // Set a new random image
+//                   if (counter == 5) {
+//                     getResultScreen();
+//                   }
+//                   counter++;
+//                   print(counter);
+//                   setRandomImage();
+//                   // Reset the result
+//                   setState(() {
+//                     result = 0;
+//                   });
+//                 },
+//                 child: Text('${realbuttonNumbers[buttonNumbers[2]]}'),
+//               ),
+//             ],
+//           ),
+//           SizedBox(
+//             height: 20,
+//           ),
+//           Row(
+//             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//             children: [
+//               ElevatedButton(
+//                 onPressed: () {
+//                   // Check if the guess is correct
 
-  @override
-  State<ResultSCreen> createState() => _ResultSCreenState();
-}
+//                   checkGuess(buttonNumbers[3]);
 
-class _ResultSCreenState extends State<ResultSCreen> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold();
-  }
-}
+//                   // Set a new random image
+//                   if (counter == 5) {
+//                     getResultScreen();
+//                   }
+//                   counter++;
+//                   print(counter);
+//                   setRandomImage();
+//                   // Reset the result
+
+//                   setState(() {
+//                     result = 0;
+//                   });
+//                 },
+//                 child: Text('${realbuttonNumbers[buttonNumbers[3]]}'),
+//               ),
+//               ElevatedButton(
+//                 onPressed: () {
+//                   // Check if the guess is correct
+
+//                   checkGuess(buttonNumbers[4]);
+//                   if (counter == 5) {
+//                     getResultScreen();
+//                   }
+//                   counter++;
+//                   print(counter);
+//                   setRandomImage();
+
+//                   // Reset the result
+//                   setState(() {
+//                     result = 0;
+//                   });
+//                 },
+//                 child: Text('${realbuttonNumbers[buttonNumbers[4]]}'),
+//               ),
+//               ElevatedButton(
+//                 onPressed: () {
+//                   // Check if the guess is correct
+//                   checkGuess(buttonNumbers[5]);
+//                   if (counter == 5) {
+//                     getResultScreen();
+//                   }
+//                   counter++;
+//                   print(counter);
+//                   setRandomImage();
+
+//                   // Reset the result
+//                   setState(() {
+//                     result = 0;
+//                   });
+//                 },
+//                 child: Text('${realbuttonNumbers[buttonNumbers[5]]}'),
+//               ),
+//             ],
+//           ),
+//           SizedBox(height: 20),
+
+//           Text(result == 1
+//               ? 'Correct Guess!'
+//               : result == 2
+//                   ? 'Incorrect Guess.'
+//                   : "Please select correct option"),
+//         ],
+//       ),
+//     );
+//   }
+// }
+
+// class ResultSCreen extends StatefulWidget {
+//   const ResultSCreen({super.key});
+
+//   @override
+//   State<ResultSCreen> createState() => _ResultSCreenState();
+// }
+
+// class _ResultSCreenState extends State<ResultSCreen> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold();
+//   }
+// }

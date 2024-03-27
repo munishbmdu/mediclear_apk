@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mediclear_labs/constants/api_domain.dart';
 import 'package:mediclear_labs/constants/colors.dart';
+import 'package:mediclear_labs/screens/Eyes_test/screens/eye_test_screen3.dart';
 import 'package:mediclear_labs/screens/application_form/screens/form.dart';
 import 'package:mediclear_labs/screens/application_form/widgets/notification.dart';
 import 'package:mediclear_labs/screens/hearing_test/screens/graph_screen.dart';
@@ -115,12 +116,14 @@ class _TestScreenState extends State<TestScreen> {
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Coloors.fontcolor),
                     onPressed: () async {
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  LoginOptionsToggleButton()));
                       await preferences.remove('token');
+                      Navigator.pushReplacementNamed(context, '/');
+                      // Navigator.pushReplacement(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (context) => LoginOptionsToggleButton(),
+                      //   ),
+                      // );
                     },
                     child: Text(
                       'Yes',
@@ -699,10 +702,15 @@ class _TestScreenState extends State<TestScreen> {
                 child: CustomTextButton(
                   text: "Vertigo checkup",
                   onTap: () {
-                    Navigator.of(context)
-                        .push(MaterialPageRoute(builder: (context) => MyForm()
-                            // HearingTestGraphSCreen(),
-                            ));
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) =>
+                          // ImageGuessing(
+                          //   medical_id: '',
+                          // ),
+                          // VertigoTest(),
+                          MyForm(),
+                      // HearingTestGraphSCreen(),
+                    ));
                   },
                 ),
               ),

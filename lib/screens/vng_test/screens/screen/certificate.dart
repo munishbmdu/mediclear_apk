@@ -64,7 +64,7 @@ class _CertificatePageState extends State<CertificatePage> {
                           minRadius: 40,
                           backgroundImage: profile_pic != null
                               ? NetworkImage(
-                                  "https://qbacp.com/mediclear/public/images" +
+                                  "https://qbacp.com/mediclear/public/images/" +
                                       profile_pic)
                               : NetworkImage(
                                   "https://qbacp.com/mediclear/public/images" +

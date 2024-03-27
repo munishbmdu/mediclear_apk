@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:dropdown_textfield/dropdown_textfield.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
@@ -103,7 +104,8 @@ class _MyFormState extends State<MyForm> {
   var comapny_id = "";
   var value;
   var type;
-
+  Uint8List? _image;
+  File? pickedImage;
   late String name = "";
   _makingPhoneCall() async {
     var url = Uri.parse("tel:9667371301");
@@ -1551,7 +1553,7 @@ class _MyFormState extends State<MyForm> {
                                   style: TextStyle(color: Colors.white),
                                 ),
                               ),
-                              const SizedBox(width: 20),
+                              const SizedBox(width: 15),
                               _signatureBytes != null
                                   ? Column(
                                       crossAxisAlignment:
@@ -1562,8 +1564,6 @@ class _MyFormState extends State<MyForm> {
                                             border: Border.all(
                                                 color: Colors.black,
                                                 width: 0.5),
-
-                                            //borderRadius: BorderRadius.circular(10)
                                           ),
                                           child: Image.memory(
                                             _signatureBytes!,
@@ -1590,6 +1590,7 @@ class _MyFormState extends State<MyForm> {
                                                 .isGranted &&
                                             statuses[Permission.camera]!
                                                 .isGranted) {
+                                          // imagePickerOption();
                                           showSignPicker(context);
                                         } else {
                                           print('no permission provided');
@@ -1719,6 +1720,8 @@ class _MyFormState extends State<MyForm> {
                                                                                 InputBorder.none),
                                                                     onTap: () {
                                                                       //    getCompany({"batch_no":batch.text.toString()});
+                                                                      print(
+                                                                          "Navneet");
                                                                       showDialog(
                                                                           context:
                                                                               context,
@@ -1749,6 +1752,7 @@ class _MyFormState extends State<MyForm> {
                                                                                                     ),
                                                                                                     onTap: () {
                                                                                                       Company.text = snapshot.data[index]['company_name'];
+                                                                                                      print(Company.text);
                                                                                                       comapny_id = snapshot.data[index]['company_id'];
                                                                                                       Navigator.pop(context);
                                                                                                     },
@@ -2111,7 +2115,8 @@ class _MyFormState extends State<MyForm> {
                         ],
                       ),
                       onTap: () {
-                        _imgFromGallery();
+                        // _imgFromGallery();
+                        pickImage(ImageSource.gallery);
                         Navigator.pop(context);
                       },
                     )),
@@ -2135,7 +2140,8 @@ class _MyFormState extends State<MyForm> {
                         ),
                       ),
                       onTap: () {
-                        _imgFromCamera();
+                        pickImage(ImageSource.camera);
+                        // _imgFromCamera();
                         Navigator.pop(context);
                       },
                     ))
@@ -2145,68 +2151,68 @@ class _MyFormState extends State<MyForm> {
         });
   }
 
-  _imgFromGallery() async {
-    await picker2
-        .pickImage(source: ImageSource.gallery, imageQuality: 50)
-        .then((value) {
-      if (value != null) {
-        _cropImage(File(value.path));
-      }
-    });
-  }
+  // _imgFromGallery() async {
+  //   await picker2
+  //       .pickImage(source: ImageSource.gallery, imageQuality: 50)
+  //       .then((value) {
+  //     if (value != null) {
+  //       _cropImage(File(value.path));
+  //     }
+  //   });
+  // }
 
-  _imgFromCamera() async {
-    await picker2
-        .pickImage(source: ImageSource.camera, imageQuality: 50)
-        .then((value) {
-      if (value != null) {
-        _cropImage(File(value.path));
-      }
-    });
-  }
+  // _imgFromCamera() async {
+  //   await picker2
+  //       .pickImage(source: ImageSource.camera, imageQuality: 50)
+  //       .then((value) {
+  //     if (value != null) {
+  //       _cropImage(File(value.path));
+  //     }
+  //   });
+  // }
 
-  _cropImage(
-    File imgFile,
-  ) async {
-    final croppedFile = await ImageCropper().cropImage(
-        sourcePath: imgFile.path,
-        aspectRatioPresets: Platform.isAndroid
-            ? [
-                CropAspectRatioPreset.square,
-                CropAspectRatioPreset.ratio3x2,
-                CropAspectRatioPreset.original,
-                CropAspectRatioPreset.ratio4x3,
-                CropAspectRatioPreset.ratio16x9
-              ]
-            : [
-                CropAspectRatioPreset.original,
-                CropAspectRatioPreset.square,
-                CropAspectRatioPreset.ratio3x2,
-                CropAspectRatioPreset.ratio4x3,
-                CropAspectRatioPreset.ratio5x3,
-                CropAspectRatioPreset.ratio5x4,
-                CropAspectRatioPreset.ratio7x5,
-                CropAspectRatioPreset.ratio16x9
-              ],
-        uiSettings: [
-          AndroidUiSettings(
-              toolbarTitle: "Image Cropper",
-              toolbarColor: Colors.deepOrange,
-              toolbarWidgetColor: Colors.white,
-              initAspectRatio: CropAspectRatioPreset.original,
-              lockAspectRatio: false),
-          IOSUiSettings(
-            title: "Image Cropper",
-          )
-        ]);
-    if (croppedFile != null) {
-      imageCache.clear();
-      setState(() {
-        imageFile2 = File(croppedFile.path);
-      });
-      // reload();
-    }
-  }
+  // _cropImage(
+  //   File imgFile,
+  // ) async {
+  //   final croppedFile = await ImageCropper().cropImage(
+  //       sourcePath: imgFile.path,
+  //       aspectRatioPresets: Platform.isAndroid
+  //           ? [
+  //               CropAspectRatioPreset.square,
+  //               CropAspectRatioPreset.ratio3x2,
+  //               CropAspectRatioPreset.original,
+  //               CropAspectRatioPreset.ratio4x3,
+  //               CropAspectRatioPreset.ratio16x9
+  //             ]
+  //           : [
+  //               CropAspectRatioPreset.original,
+  //               CropAspectRatioPreset.square,
+  //               CropAspectRatioPreset.ratio3x2,
+  //               CropAspectRatioPreset.ratio4x3,
+  //               CropAspectRatioPreset.ratio5x3,
+  //               CropAspectRatioPreset.ratio5x4,
+  //               CropAspectRatioPreset.ratio7x5,
+  //               CropAspectRatioPreset.ratio16x9
+  //             ],
+  //       uiSettings: [
+  //         AndroidUiSettings(
+  //             toolbarTitle: "Image Cropper",
+  //             toolbarColor: Colors.deepOrange,
+  //             toolbarWidgetColor: Colors.white,
+  //             initAspectRatio: CropAspectRatioPreset.original,
+  //             lockAspectRatio: false),
+  //         IOSUiSettings(
+  //           title: "Image Cropper",
+  //         )
+  //       ]);
+  //   if (croppedFile != null) {
+  //     imageCache.clear();
+  //     setState(() {
+  //       imageFile2 = File(croppedFile.path);
+  //     });
+  //     // reload();
+  //   }
+  // }
 
   final picker = ImagePicker();
 
@@ -2241,7 +2247,8 @@ class _MyFormState extends State<MyForm> {
                         ],
                       ),
                       onTap: () {
-                        _imgFromGallery2();
+                        pickImage(ImageSource.gallery);
+                        // _imgFromGallery2();
                         Navigator.pop(context);
                       },
                     )),
@@ -2265,7 +2272,8 @@ class _MyFormState extends State<MyForm> {
                         ),
                       ),
                       onTap: () {
-                        _imgFromCamera2();
+                        // _imgFromCamera2();
+                        pickImage(ImageSource.camera);
                         Navigator.pop(context);
                       },
                     ))
@@ -2275,69 +2283,149 @@ class _MyFormState extends State<MyForm> {
         });
   }
 
-  _imgFromGallery2() async {
-    await picker
-        .pickImage(source: ImageSource.gallery, imageQuality: 50)
-        .then((value) {
-      if (value != null) {
-        _cropImage2(File(value.path));
-      }
-    });
-  }
+  // _imgFromGallery2() async {
+  //   await picker.pickImage(source: ImageSource.gallery).then((value) {
+  //     if (value != null) {
+  //       setState(() {
+  //         _cropImage2(File(value.path));
+  //       });
+  //     }
+  //   });
+  // }
 
-  _imgFromCamera2() async {
-    await picker
-        .pickImage(source: ImageSource.camera, imageQuality: 50)
-        .then((value) {
-      if (value != null) {
-        _cropImage2(File(value.path));
-      }
-    });
-  }
+  // _imgFromCamera2() async {
+  //   await picker.pickImage(source: ImageSource.camera).then((value) {
+  //     if (value != null) {
+  //       setState(() {
+  //         _cropImage2(File(value.path));
+  //       });
+  //     }
+  //   });
+  // }
 
-  File? returnImageFile() {
-    return imageFile;
-  }
+  // File? returnImageFile() {
+  //   return imageFile;
+  // }
 
-  _cropImage2(File imgFile) async {
-    final croppedFile = await ImageCropper().cropImage(
-        sourcePath: imgFile.path,
-        aspectRatioPresets: Platform.isAndroid
-            ? [
-                CropAspectRatioPreset.square,
-                CropAspectRatioPreset.ratio3x2,
-                CropAspectRatioPreset.original,
-                CropAspectRatioPreset.ratio4x3,
-                CropAspectRatioPreset.ratio16x9
-              ]
-            : [
-                CropAspectRatioPreset.original,
-                CropAspectRatioPreset.square,
-                CropAspectRatioPreset.ratio3x2,
-                CropAspectRatioPreset.ratio4x3,
-                CropAspectRatioPreset.ratio5x3,
-                CropAspectRatioPreset.ratio5x4,
-                CropAspectRatioPreset.ratio7x5,
-                CropAspectRatioPreset.ratio16x9
-              ],
-        uiSettings: [
-          AndroidUiSettings(
-              toolbarTitle: "Image Cropper",
-              toolbarColor: Colors.deepOrange,
-              toolbarWidgetColor: Colors.white,
-              initAspectRatio: CropAspectRatioPreset.original,
-              lockAspectRatio: false),
-          IOSUiSettings(
-            title: "Image Cropper",
-          )
-        ]);
-    if (croppedFile != null) {
-      imageCache.clear();
+  // _cropImage2(File imgFile) async {
+  //   final croppedFile = await ImageCropper().cropImage(
+  //       sourcePath: imgFile.path,
+  //       aspectRatioPresets: Platform.isAndroid
+  //           ? [
+  //               CropAspectRatioPreset.square,
+  //               CropAspectRatioPreset.ratio3x2,
+  //               CropAspectRatioPreset.original,
+  //               CropAspectRatioPreset.ratio4x3,
+  //               CropAspectRatioPreset.ratio16x9
+  //             ]
+  //           : [
+  //               CropAspectRatioPreset.original,
+  //               CropAspectRatioPreset.square,
+  //               CropAspectRatioPreset.ratio3x2,
+  //               CropAspectRatioPreset.ratio4x3,
+  //               CropAspectRatioPreset.ratio5x3,
+  //               CropAspectRatioPreset.ratio5x4,
+  //               CropAspectRatioPreset.ratio7x5,
+  //               CropAspectRatioPreset.ratio16x9
+  //             ],
+  //       uiSettings: [
+  //         AndroidUiSettings(
+  //             toolbarTitle: "Image Cropper",
+  //             toolbarColor: Colors.deepOrange,
+  //             toolbarWidgetColor: Colors.white,
+  //             initAspectRatio: CropAspectRatioPreset.original,
+  //             lockAspectRatio: false),
+  //         IOSUiSettings(
+  //           title: "Image Cropper",
+  //         )
+  //       ]);
+  //   if (croppedFile != null) {
+  //     imageCache.clear();
+  //     setState(() {
+  //       imageFile = File(croppedFile.path);
+  //       //returnImageFile();
+  //     });
+  //     // reload();
+  //   }
+  // }
+
+// my personal data
+  // void selectimage() async {
+  //   Uint8List img = await pickImage(ImageSource.gallery);
+  //   setState(() {
+  //     _image = img;
+  //   });
+  // }
+
+  // void imagePickerOption() {
+  //   Get.bottomSheet(
+  //     SingleChildScrollView(
+  //       child: ClipRRect(
+  //         borderRadius: const BorderRadius.only(
+  //           topLeft: Radius.circular(10.0),
+  //           topRight: Radius.circular(10.0),
+  //         ),
+  //         child: Container(
+  //           color: Colors.white,
+  //           height: 250,
+  //           child: Padding(
+  //             padding: const EdgeInsets.all(8.0),
+  //             child: Column(
+  //               crossAxisAlignment: CrossAxisAlignment.stretch,
+  //               children: [
+  //                 const Text(
+  //                   "Pic Image From",
+  //                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+  //                   textAlign: TextAlign.center,
+  //                 ),
+  //                 const SizedBox(
+  //                   height: 10,
+  //                 ),
+  //                 ElevatedButton.icon(
+  //                   onPressed: () {
+  //                     pickImage(ImageSource.camera);
+  //                   },
+  //                   icon: const Icon(Icons.camera),
+  //                   label: const Text("CAMERA"),
+  //                 ),
+  //                 ElevatedButton.icon(
+  //                   onPressed: () {
+  //                     pickImage(ImageSource.gallery);
+  //                   },
+  //                   icon: const Icon(Icons.image),
+  //                   label: const Text("GALLERY"),
+  //                 ),
+  //                 const SizedBox(
+  //                   height: 10,
+  //                 ),
+  //                 ElevatedButton.icon(
+  //                   onPressed: () {
+  //                     Get.back();
+  //                   },
+  //                   icon: const Icon(Icons.close),
+  //                   label: const Text("CANCEL"),
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
+
+  pickImage(ImageSource imageType) async {
+    try {
+      final photo = await ImagePicker().pickImage(source: imageType);
+      if (photo == null) return;
+      final tempImage = File(photo.path);
       setState(() {
-        imageFile = File(croppedFile.path);
-        //returnImageFile();
+        imageFile2 = tempImage;
       });
-      // reload();
+
+      Get.back();
+    } catch (error) {
+      debugPrint(error.toString());
     }
   }
 }
@@ -2355,59 +2443,3 @@ Widget listTile({String? title, icon, Function()? callback}) {
     ),
   );
 }
-
-//  Container(
-//         decoration: BoxDecoration(
-//             borderRadius: BorderRadius.circular(11),
-//             border: Border.all(color: Colors.grey)
-//         ),
-//         height: MediaQuery.of(context).size.height*0.06,
-//         width: MediaQuery.of(context).size.width*0.89,
-//         child: Padding(
-//           padding: const EdgeInsets.symmetric(horizontal: 10),
-//           child: Center(
-//             child: Row(
-//               mainAxisAlignment: MainAxisAlignment.spaceAround,
-//               children: [
-//                 Container(
-//                   width: MediaQuery.of(context).size.width*0.77,
-//                   child: 
-//                  TextField(
-//                     controller: dateInput,
-//                     //editing controller of this TextField
-//                     decoration: InputDecoration(
-//                       //icon of text field
-//                       border:InputBorder.none,
-//                       hintText: "D.O.B", //label text of field
-//                       hintStyle: TextStyle(color: Colors.grey.shade600,fontSize: 17),
-//                     ),
-//                     readOnly: true,
-//                     //set it true, so that user will not able to edit text
-//                     onTap: () async {
-//                       DateTime? pickedDate = await showDatePicker(
-//                           context: context,
-//                           initialDate: DateTime.now(),
-//                           firstDate: DateTime(1950),
-//                           //DateTime.now() - not to allow to choose before today.
-//                           lastDate: DateTime.now());
-
-//                       if (pickedDate != null) {
-//                         print(
-//                             pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
-//                         String formattedDate =
-//                         DateFormat('yyyy-MM-dd').format(pickedDate);
-//                         print(
-//                             formattedDate); //formatted date output using intl package =>  2021-03-16
-//                         setState(() {
-//                           dateInput.text =
-//                               formattedDate; //set output date to TextField value.
-//                         });
-//                       } else {}
-//                     },
-//                   ),
-//                 ),
-//                 Icon(Icons.calendar_month)
-//               ],
-//             ),
-//           ),
-//         ),)

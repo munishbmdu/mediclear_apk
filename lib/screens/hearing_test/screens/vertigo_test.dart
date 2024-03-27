@@ -76,19 +76,19 @@ class _VertigoTestState extends State<VertigoTest> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
+    // SystemChrome.setPreferredOrientations([
+    //   DeviceOrientation.portraitUp,
+    //   DeviceOrientation.portraitDown,
+    // ]);
     print(widget.batch_no);
     return WillPopScope(
       onWillPop: () async {
-        SystemChrome.setPreferredOrientations([
-          DeviceOrientation.landscapeLeft,
-          DeviceOrientation.landscapeRight,
-        ]);
+        // SystemChrome.setPreferredOrientations([
+        //   DeviceOrientation.landscapeLeft,
+        //   DeviceOrientation.landscapeRight,
+        // ]);
 
-        SharedPreferences preferences = await SharedPreferences.getInstance();
+        // SharedPreferences preferences = await SharedPreferences.getInstance();
         final value = await showDialog<bool>(
           context: context,
           builder: (context) => AlertDialog(
