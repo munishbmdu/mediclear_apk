@@ -10,25 +10,22 @@ class HomeTab extends StatelessWidget {
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
-         
           children: [
-           
             Padding(
               padding: const EdgeInsets.only(top: 20),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                 
-                //  InkWell(
-                //   onTap: () {
-                //      ShowBottomSheet.showBottomSheet1(context);
-                //   },
-                  
-                //    child: Container(
-                //      height: 60,
-                //       width: 60,
-                //       child: Image.asset("assets/logo1.jpg",fit: BoxFit.cover,)),
-                //  ),
+                  //  InkWell(
+                  //   onTap: () {
+                  //      ShowBottomSheet.showBottomSheet1(context);
+                  //   },
+
+                  //    child: Container(
+                  //      height: 60,
+                  //       width: 60,
+                  //       child: Image.asset("assets/logo1.jpg",fit: BoxFit.cover,)),
+                  //  ),
                   //    InkWell(
                   // onTap: () {
                   //   ShowBottomSheet.showBottomSheet2(context);
@@ -41,31 +38,37 @@ class HomeTab extends StatelessWidget {
                 ],
               ),
             ),
-            
-         const SizedBox(
-          height: 40,
-         ),
-         Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-           children: [
+            const SizedBox(
+              height: 40,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                    height: 300,
+                    width: 300,
+                    child: Image.asset("assets/mediclear.jpg"))
+              ],
+            ),
+            const SizedBox(
+              height: 100,
+            ),
             Container(
-              height: 300,
-              width: 300,
-              child: Image.asset("assets/mediclear.jpg"))
-           ],
-         ),
-         const SizedBox(
-        height: 100,
-         ),
-         Container(
-          height: 50,
-          width: 250,
-           child: CustomTextButton(text:"Click For Hearing", onTap: () { Navigator.push(context, MaterialPageRoute(builder:(context) => IndicatorWithScreens(),)); },
-           
-           ),
-         )
-        
-          
+              height: 50,
+              width: 250,
+              child: CustomTextButton(
+                text: "Click For Hearing",
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => IndicatorWithScreens(
+                          medical_id: '',
+                        ),
+                      ));
+                },
+              ),
+            )
           ],
         ),
       ),

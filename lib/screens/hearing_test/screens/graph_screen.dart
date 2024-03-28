@@ -6,12 +6,15 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:mediclear_labs/constants/colors.dart';
 import 'package:mediclear_labs/screens/hearing_test/screens/vertigo_test.dart';
+import 'package:mediclear_labs/screens/test_options.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../constants/feq_api.dart';
 import 'graph_test.dart';
 import 'package:http/http.dart' as http;
 
 class HearingTestGraphSCreen extends StatefulWidget {
+  HearingTestGraphSCreen({required this.medical_id});
+  final String medical_id;
   @override
   State<HearingTestGraphSCreen> createState() => _HearingTestGraphSCreenState();
 }
@@ -49,7 +52,7 @@ class _HearingTestGraphSCreenState extends State<HearingTestGraphSCreen> {
 
   String _leftside = '';
   String _rightside = '';
-  String _medical_details_id = "128";
+  String _medical_details_id = "";
   String _test_type_id = '1';
 
   //
@@ -63,7 +66,7 @@ class _HearingTestGraphSCreenState extends State<HearingTestGraphSCreen> {
         body: {
           'left_ear_fixed': leftside,
           'right_ear_fixed': rightside,
-          'medical_details_id': medical_details_id,
+          'medical_details_id': widget.medical_id,
           'test_type_id': test_type_id
         },
       );
@@ -215,11 +218,12 @@ class _HearingTestGraphSCreenState extends State<HearingTestGraphSCreen> {
     // ignore: deprecated_member_use
     return WillPopScope(
       onWillPop: () async {
-        SystemChrome.setPreferredOrientations([
-          DeviceOrientation.portraitUp,
-          DeviceOrientation.portraitDown,
-        ]);
+        // SystemChrome.setPreferredOrientations([
+        //   DeviceOrientation.portraitUp,
+        //   DeviceOrientation.portraitDown,
+        // ]);
         Navigator.pop(context);
+
         return true;
       },
       child: Scaffold(
@@ -398,173 +402,162 @@ class _HearingTestGraphSCreenState extends State<HearingTestGraphSCreen> {
                 ),
                 Container(
                   width: 220,
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text("Left"),
-                            Radio(
-                              value: 0,
-                              groupValue: _selectedContainerIndex,
-                              onChanged: (value) {
-                                _setSelectedContainerIndex(value!);
-                              },
-                            ),
-                            Text("Right"),
-                            Radio(
-                              value: 1,
-                              groupValue: _selectedContainerIndex,
-                              onChanged: (value) {
-                                _setSelectedContainerIndex(value!);
-                              },
-                            ),
-                          ],
-                        ),
-                        Container(
-                          height: 45,
-                          width: 200,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              if (_selectedContainerIndex == 0) {
-                                moveUpOrDown(true);
-                              } else {
-                                moveUpOrDown2(true);
-                              }
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text("Left"),
+                          Radio(
+                            value: 0,
+                            groupValue: _selectedContainerIndex,
+                            onChanged: (value) {
+                              _setSelectedContainerIndex(value!);
                             },
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.grey.shade400),
-                            child: Text(
-                              "Up",
+                          ),
+                          Text("Right"),
+                          Radio(
+                            value: 1,
+                            groupValue: _selectedContainerIndex,
+                            onChanged: (value) {
+                              _setSelectedContainerIndex(value!);
+                            },
+                          ),
+                        ],
+                      ),
+                      Container(
+                        height: 45,
+                        width: 200,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            if (_selectedContainerIndex == 0) {
+                              moveUpOrDown(true);
+                            } else {
+                              moveUpOrDown2(true);
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.grey.shade400),
+                          child: Text(
+                            "Up",
+                            style: GoogleFonts.roboto(color: Coloors.fontcolor),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Container(
+                        height: 45,
+                        width: 200,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            if (_selectedContainerIndex == 0) {
+                              moveUpOrDown(false);
+                            } else {
+                              moveUpOrDown2(false);
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.grey.shade400),
+                          child: Text("Down",
                               style:
-                                  GoogleFonts.roboto(color: Coloors.fontcolor),
-                            ),
+                                  GoogleFonts.roboto(color: Coloors.fontcolor)),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Container(
+                        height: 45,
+                        width: 200,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            if (_selectedContainerIndex == 0) {
+                              moveToNextColumn();
+                              // _convertlistToString();
+                              print(combinedValues);
+                            } else {
+                              moveToNextColumn2();
+                              // _convertlistToString2();
+                              print(combinedValues2);
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.grey.shade400),
+                          child: Text(
+                            "BARELY AUDIBLE",
+                            style: GoogleFonts.roboto(color: Coloors.fontcolor),
                           ),
                         ),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        Container(
-                          height: 45,
-                          width: 200,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              if (_selectedContainerIndex == 0) {
-                                moveUpOrDown(false);
-                              } else {
-                                moveUpOrDown2(false);
-                              }
-                            },
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.grey.shade400),
-                            child: Text("Down",
-                                style: GoogleFonts.roboto(
-                                    color: Coloors.fontcolor)),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        Container(
-                          height: 45,
-                          width: 200,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              if (_selectedContainerIndex == 0) {
-                                moveToNextColumn();
-                                // _convertlistToString();
-                                print(combinedValues);
-                              } else {
-                                moveToNextColumn2();
-                                // _convertlistToString2();
-                                print(combinedValues2);
-                              }
-                            },
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.grey.shade400),
-                            child: Text(
-                              "BARELY AUDIBLE",
-                              style:
-                                  GoogleFonts.roboto(color: Coloors.fontcolor),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        Container(
-                          height: 45,
-                          width: 95,
-                          child: ElevatedButton(
-                            onPressed: () {
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                        height: 45,
+                        width: 95,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            SystemChrome.setPreferredOrientations([
+                              DeviceOrientation.portraitUp,
+                              DeviceOrientation.portraitDown,
+                            ]);
+
+                            // Navigator.pushReplacement(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //     builder: (context) => VertigoTest(
+                            //       val4: 1,
+                            //     ),
+                            //   ),
+                            // ).then((_) {
+                            //   // Reset to portrait mode after navigating away from the landscape screen
+                            //   SystemChrome.setPreferredOrientations([
+                            //     DeviceOrientation.portraitUp,
+                            //     DeviceOrientation.portraitDown,
+                            //   ]);
+                            // });
+
+                            sendDataToApi(_leftside, _rightside,
+                                _medical_details_id, _test_type_id);
+                            Navigator.of(context)
+                                .pushReplacement(MaterialPageRoute(
+                              builder: (context) => VertigoTest(val4: 1),
+                            ))
+                                .then((_) {
+                              // Reset to portrait mode after navigating away from the landscape screen
                               SystemChrome.setPreferredOrientations([
                                 DeviceOrientation.portraitUp,
                                 DeviceOrientation.portraitDown,
                               ]);
+                            });
 
-                              // Navigator.pushReplacement(
-                              //   context,
-                              //   MaterialPageRoute(
-                              //     builder: (context) => VertigoTest(
-                              //       val4: 1,
-                              //     ),
-                              //   ),
-                              // ).then((_) {
-                              //   // Reset to portrait mode after navigating away from the landscape screen
-                              //   SystemChrome.setPreferredOrientations([
-                              //     DeviceOrientation.portraitUp,
-                              //     DeviceOrientation.portraitDown,
-                              //   ]);
-                              // });
-
-                              sendDataToApi(_leftside, _rightside,
-                                  _medical_details_id, _test_type_id);
-                              Navigator.of(context)
-                                  .pushReplacement(MaterialPageRoute(
-                                builder: (context) => VertigoTest(val4: 1),
-                              ))
-                                  .then((_) {
-                                // Reset to portrait mode after navigating away from the landscape screen
-                                SystemChrome.setPreferredOrientations([
-                                  DeviceOrientation.portraitUp,
-                                  DeviceOrientation.portraitDown,
-                                ]);
-                              });
-
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text('Result submitted'),
-                                  duration: Duration(seconds: 3),
-                                ),
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Result submitted'),
+                                duration: Duration(seconds: 3),
+                              ),
+                            );
+                            // Redirect to Next Page after 3 seconds
+                            Future.delayed(Duration(seconds: 3), () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => VertigoTest()),
                               );
-                              // Redirect to Next Page after 3 seconds
-                              Future.delayed(Duration(seconds: 3), () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => VertigoTest()),
-                                );
-                              });
-                            },
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.grey.shade400),
-                            child: Text(
-                              "Done",
-                              style:
-                                  GoogleFonts.roboto(color: Coloors.fontcolor),
-                            ),
+                            });
+                          },
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.grey.shade400),
+                          child: Text(
+                            "Done",
+                            style: GoogleFonts.roboto(color: Coloors.fontcolor),
                           ),
                         ),
-                        ElevatedButton(
-                            onPressed: () {
-                              print(combinedValues);
-                              print(combinedValues2);
-                            },
-                            child: Text("check"))
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 )
               ],

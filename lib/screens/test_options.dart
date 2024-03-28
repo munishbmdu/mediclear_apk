@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mediclear_labs/constants/api_domain.dart';
 import 'package:mediclear_labs/constants/colors.dart';
@@ -72,6 +73,10 @@ class _TestScreenState extends State<TestScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // SystemChrome.setPreferredOrientations([
+    //   DeviceOrientation.portraitUp,
+    //   DeviceOrientation.portraitDown,
+    // ]);
     return WillPopScope(
       onWillPop: () async {
         SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -707,9 +712,12 @@ class _TestScreenState extends State<TestScreen> {
                           // ImageGuessing(
                           //   medical_id: '',
                           // ),
+                          // ImageGuessing(medical_id: '132'),
                           // VertigoTest(),
                           MyForm(),
-                      // HearingTestGraphSCreen(),
+                      //     HearingTestGraphSCreen(
+                      //   medical_id: "",
+                      // ),
                     ));
                   },
                 ),

@@ -76,10 +76,10 @@ class _VertigoTestState extends State<VertigoTest> {
 
   @override
   Widget build(BuildContext context) {
-    // SystemChrome.setPreferredOrientations([
-    //   DeviceOrientation.portraitUp,
-    //   DeviceOrientation.portraitDown,
-    // ]);
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     print(widget.batch_no);
     return WillPopScope(
       onWillPop: () async {
@@ -494,7 +494,9 @@ class _VertigoTestState extends State<VertigoTest> {
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => IndicatorWithScreens()),
+                                builder: (context) => IndicatorWithScreens(
+                                      medical_id: widget.id,
+                                    )),
                           );
                         },
                       ),
@@ -509,7 +511,9 @@ class _VertigoTestState extends State<VertigoTest> {
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => IndicatorWithScreens()),
+                                builder: (context) => IndicatorWithScreens(
+                                      medical_id: widget.id,
+                                    )),
                           );
                         },
                       ),

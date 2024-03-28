@@ -6,7 +6,15 @@ import 'package:mediclear_labs/screens/hearing_test/screens/screen1.dart';
 import 'package:mediclear_labs/screens/hearing_test/screens/screen2.dart';
 import 'package:mediclear_labs/screens/hearing_test/screens/screen3.dart';
 
-class IndicatorWithScreens extends StatelessWidget {
+class IndicatorWithScreens extends StatefulWidget {
+  IndicatorWithScreens({super.key, required this.medical_id});
+  String medical_id;
+
+  @override
+  State<IndicatorWithScreens> createState() => _IndicatorWithScreensState();
+}
+
+class _IndicatorWithScreensState extends State<IndicatorWithScreens> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,12 +38,16 @@ class IndicatorWithScreens extends StatelessWidget {
         centerTitle: true,
         elevation: 0,
       ),
-      body: ScreenPager(),
+      body: ScreenPager(
+        medical_id: widget.medical_id,
+      ),
     );
   }
 }
 
 class ScreenPager extends StatefulWidget {
+  ScreenPager({super.key, required this.medical_id});
+  String medical_id;
   @override
   _ScreenPagerState createState() => _ScreenPagerState();
 }
@@ -132,8 +144,9 @@ class _ScreenPagerState extends State<ScreenPager> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      HearingTestGraphSCreen(),
+                                  builder: (context) => HearingTestGraphSCreen(
+                                    medical_id: widget.medical_id,
+                                  ),
                                 ));
                           },
                           style: ElevatedButton.styleFrom(
