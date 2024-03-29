@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:mediclear_labs/screens/Eyes_test/screens/eye_test_creen1.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../constants/api_domain.dart';
@@ -30,7 +31,7 @@ class _ImageGuessingState extends State<ImageGuessing> {
   ];
 
   String currentImage = '';
-  String correctAnswer = ''; // Number associated with the current image
+  String correctAnswer = '';
   int result = 0;
   int counter = 0;
 
@@ -134,8 +135,8 @@ class _ImageGuessingState extends State<ImageGuessing> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-            builder: (context) => VertigoTest(
-                  id: widget.medical_id,
+            builder: (context) => EyeTestScreen1(
+                  medical_id: widget.medical_id,
                 )),
       );
     });

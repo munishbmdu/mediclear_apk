@@ -86,6 +86,7 @@ class _CertificatePageState extends State<CertificatePage> {
                         child: Padding(
                           padding: const EdgeInsets.only(left: 10, bottom: 5),
                           child: TextField(
+                            readOnly: true,
                             decoration:
                                 InputDecoration(border: InputBorder.none),
                             controller: TextEditingController(
@@ -113,6 +114,7 @@ class _CertificatePageState extends State<CertificatePage> {
                         child: Padding(
                           padding: const EdgeInsets.only(left: 10, bottom: 5),
                           child: TextField(
+                            readOnly: true,
                             decoration:
                                 InputDecoration(border: InputBorder.none),
                             controller: TextEditingController(
@@ -137,6 +139,7 @@ class _CertificatePageState extends State<CertificatePage> {
                         child: Padding(
                           padding: const EdgeInsets.only(left: 10, bottom: 5),
                           child: TextField(
+                            readOnly: true,
                             decoration:
                                 InputDecoration(border: InputBorder.none),
                             controller: TextEditingController(
@@ -163,6 +166,7 @@ class _CertificatePageState extends State<CertificatePage> {
                         child: Padding(
                           padding: const EdgeInsets.only(left: 10, bottom: 5),
                           child: TextField(
+                            readOnly: true,
                             decoration:
                                 InputDecoration(border: InputBorder.none),
                             controller:
@@ -189,6 +193,7 @@ class _CertificatePageState extends State<CertificatePage> {
                         child: Padding(
                           padding: const EdgeInsets.only(left: 10, bottom: 5),
                           child: TextField(
+                            readOnly: true,
                             decoration:
                                 InputDecoration(border: InputBorder.none),
                             controller: TextEditingController(
@@ -213,6 +218,7 @@ class _CertificatePageState extends State<CertificatePage> {
                         child: Padding(
                           padding: const EdgeInsets.only(left: 10, bottom: 5),
                           child: TextField(
+                            readOnly: true,
                             decoration:
                                 InputDecoration(border: InputBorder.none),
                             controller: TextEditingController(
@@ -239,6 +245,7 @@ class _CertificatePageState extends State<CertificatePage> {
                         child: Padding(
                           padding: const EdgeInsets.only(left: 10, bottom: 5),
                           child: TextField(
+                            readOnly: true,
                             decoration:
                                 InputDecoration(border: InputBorder.none),
                             controller: TextEditingController(
@@ -265,6 +272,7 @@ class _CertificatePageState extends State<CertificatePage> {
                         child: Padding(
                           padding: const EdgeInsets.only(left: 10, bottom: 5),
                           child: TextField(
+                            readOnly: true,
                             decoration:
                                 InputDecoration(border: InputBorder.none),
                             controller: TextEditingController(
@@ -291,6 +299,7 @@ class _CertificatePageState extends State<CertificatePage> {
                         child: Padding(
                           padding: const EdgeInsets.only(left: 10, bottom: 5),
                           child: TextField(
+                            readOnly: true,
                             decoration:
                                 InputDecoration(border: InputBorder.none),
                             controller: TextEditingController(

@@ -33,7 +33,12 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Roboto',
         appBarTheme: AppBarTheme(color: Colors.white),
       ),
-      home: SplashScreen(),
+      initialRoute: '/splash',
+      routes: {
+        '/splash': (context) => SplashScreen(),
+        '/login': (context) => LoginOptionsToggleButton(),
+      },
+      // home: SplashScreen(),
     );
   }
 }

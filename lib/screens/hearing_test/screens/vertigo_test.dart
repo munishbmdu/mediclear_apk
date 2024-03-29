@@ -83,11 +83,6 @@ class _VertigoTestState extends State<VertigoTest> {
     print(widget.batch_no);
     return WillPopScope(
       onWillPop: () async {
-        // SystemChrome.setPreferredOrientations([
-        //   DeviceOrientation.landscapeLeft,
-        //   DeviceOrientation.landscapeRight,
-        // ]);
-
         // SharedPreferences preferences = await SharedPreferences.getInstance();
         final value = await showDialog<bool>(
           context: context,
@@ -103,7 +98,6 @@ class _VertigoTestState extends State<VertigoTest> {
             actions: <Widget>[
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                    //backgroundColor: appcolor.appcolors,
                     shape: BeveledRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(2)))),
                 onPressed: () => Navigator.of(context).pop(false),

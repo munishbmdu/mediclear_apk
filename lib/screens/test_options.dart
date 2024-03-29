@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mediclear_labs/constants/api_domain.dart';
 import 'package:mediclear_labs/constants/colors.dart';
 import 'package:mediclear_labs/screens/Eyes_test/screens/eye_test_screen3.dart';
+import 'package:mediclear_labs/screens/Eyes_test/screens/visual_test.dart';
 import 'package:mediclear_labs/screens/application_form/screens/form.dart';
 import 'package:mediclear_labs/screens/application_form/widgets/notification.dart';
 import 'package:mediclear_labs/screens/hearing_test/screens/graph_screen.dart';
@@ -73,10 +74,10 @@ class _TestScreenState extends State<TestScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // SystemChrome.setPreferredOrientations([
-    //   DeviceOrientation.portraitUp,
-    //   DeviceOrientation.portraitDown,
-    // ]);
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     return WillPopScope(
       onWillPop: () async {
         SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -121,14 +122,9 @@ class _TestScreenState extends State<TestScreen> {
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Coloors.fontcolor),
                     onPressed: () async {
-                      await preferences.remove('token');
-                      Navigator.pushReplacementNamed(context, '/');
-                      // Navigator.pushReplacement(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //     builder: (context) => LoginOptionsToggleButton(),
-                      //   ),
-                      // );
+                      await preferences.remove("token");
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, '/login', (route) => false);
                     },
                     child: Text(
                       'Yes',
@@ -649,12 +645,16 @@ class _TestScreenState extends State<TestScreen> {
                                 children: [
                                   ElevatedButton(
                                       onPressed: () async {
-                                        Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    LoginOptionsToggleButton()));
                                         await preferences.remove('token');
+                                        Navigator.pushNamedAndRemoveUntil(
+                                            context,
+                                            '/login',
+                                            (route) => false);
+                                        // Navigator.pushReplacement(
+                                        //     context,
+                                        //     MaterialPageRoute(
+                                        //         builder: (context) =>
+                                        //             LoginOptionsToggleButton()));
                                       },
                                       style: ElevatedButton.styleFrom(
                                           backgroundColor: Coloors.fontcolor),
@@ -714,6 +714,9 @@ class _TestScreenState extends State<TestScreen> {
                           // ),
                           // ImageGuessing(medical_id: '132'),
                           // VertigoTest(),
+                          //     VisualTest(
+                          //   medical_id: '135',
+                          // ),
                           MyForm(),
                       //     HearingTestGraphSCreen(
                       //   medical_id: "",

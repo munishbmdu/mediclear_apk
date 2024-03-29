@@ -218,11 +218,11 @@ class _HearingTestGraphSCreenState extends State<HearingTestGraphSCreen> {
     // ignore: deprecated_member_use
     return WillPopScope(
       onWillPop: () async {
-        // SystemChrome.setPreferredOrientations([
-        //   DeviceOrientation.portraitUp,
-        //   DeviceOrientation.portraitDown,
-        // ]);
-        Navigator.pop(context);
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => VertigoTest(),
+            ));
 
         return true;
       },
@@ -234,11 +234,11 @@ class _HearingTestGraphSCreenState extends State<HearingTestGraphSCreen> {
           automaticallyImplyLeading: false,
           leading: IconButton(
               onPressed: () {
-                SystemChrome.setPreferredOrientations([
-                  DeviceOrientation.portraitUp,
-                  DeviceOrientation.portraitDown,
-                ]);
-                Navigator.pop(context);
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => VertigoTest(),
+                    ));
               },
               icon: Icon(
                 Icons.navigate_before,
@@ -262,27 +262,27 @@ class _HearingTestGraphSCreenState extends State<HearingTestGraphSCreen> {
                   child: Stack(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(left: 1, top: 40),
+                        padding: const EdgeInsets.only(left: 1, top: 35),
                         child: Text('10'),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(left: 1, top: 75),
+                        padding: const EdgeInsets.only(left: 1, top: 82),
                         child: Text('20'),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(left: 1, top: 110),
+                        padding: const EdgeInsets.only(left: 1, top: 129),
                         child: Text('30'),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(left: 1, top: 145),
+                        padding: const EdgeInsets.only(left: 1, top: 176),
                         child: Text('40'),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(left: 1, top: 180),
+                        padding: const EdgeInsets.only(left: 1, top: 223),
                         child: Text('50'),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(left: 1, top: 215),
+                        padding: const EdgeInsets.only(left: 1, top: 270),
                         child: Text('60'),
                       ),
                       Padding(
@@ -505,14 +505,10 @@ class _HearingTestGraphSCreenState extends State<HearingTestGraphSCreen> {
                               DeviceOrientation.portraitDown,
                             ]);
 
-                            // Navigator.pushReplacement(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //     builder: (context) => VertigoTest(
-                            //       val4: 1,
-                            //     ),
-                            //   ),
-                            // ).then((_) {
+                            sendDataToApi(_leftside, _rightside,
+                                _medical_details_id, _test_type_id);
+
+                            //     .then((_) {
                             //   // Reset to portrait mode after navigating away from the landscape screen
                             //   SystemChrome.setPreferredOrientations([
                             //     DeviceOrientation.portraitUp,
@@ -520,33 +516,18 @@ class _HearingTestGraphSCreenState extends State<HearingTestGraphSCreen> {
                             //   ]);
                             // });
 
-                            sendDataToApi(_leftside, _rightside,
-                                _medical_details_id, _test_type_id);
-                            Navigator.of(context)
-                                .pushReplacement(MaterialPageRoute(
-                              builder: (context) => VertigoTest(val4: 1),
-                            ))
-                                .then((_) {
-                              // Reset to portrait mode after navigating away from the landscape screen
-                              SystemChrome.setPreferredOrientations([
-                                DeviceOrientation.portraitUp,
-                                DeviceOrientation.portraitDown,
-                              ]);
-                            });
-
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text('Result submitted'),
                                 duration: Duration(seconds: 3),
                               ),
                             );
-                            // Redirect to Next Page after 3 seconds
+
                             Future.delayed(Duration(seconds: 3), () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => VertigoTest()),
-                              );
+                              Navigator.of(context)
+                                  .pushReplacement(MaterialPageRoute(
+                                builder: (context) => VertigoTest(),
+                              ));
                             });
                           },
                           style: ElevatedButton.styleFrom(
