@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:dropdown_textfield/dropdown_textfield.dart';
+
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
@@ -36,6 +37,7 @@ import 'package:mediclear_labs/widgets/drawer/test_history.dart';
 import 'package:mediclear_labs/widgets/drawer/user_profile.dart';
 import 'package:mediclear_labs/widgets/legal.dart';
 import 'package:mediclear_labs/widgets/signature.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:signature/signature.dart';
@@ -137,6 +139,7 @@ class _MyFormState extends State<MyForm> {
                 setState(() {
                   _controller.clear();
                   _signatureBytes = null;
+                  imageFile2 = null;
                 });
               },
               child: const Text('Clear'),
@@ -159,10 +162,16 @@ class _MyFormState extends State<MyForm> {
                   DeviceOrientation.portraitUp,
                   DeviceOrientation.portraitDown,
                 ]);
-                _controller.toPngBytes().then((signatureBytes) {
+                _controller.toPngBytes().then((signatureBytes) async {
                   setState(() {
                     _signatureBytes = signatureBytes;
                   });
+                  if (_signatureBytes != null) {
+                    File imagefile = await saveImage(_signatureBytes!);
+                    setState(() {
+                      imageFile2 = imagefile;
+                    });
+                  }
                   Navigator.of(context).pop();
                 });
               },
@@ -2151,69 +2160,6 @@ class _MyFormState extends State<MyForm> {
         });
   }
 
-  // _imgFromGallery() async {
-  //   await picker2
-  //       .pickImage(source: ImageSource.gallery, imageQuality: 50)
-  //       .then((value) {
-  //     if (value != null) {
-  //       _cropImage(File(value.path));
-  //     }
-  //   });
-  // }
-
-  // _imgFromCamera() async {
-  //   await picker2
-  //       .pickImage(source: ImageSource.camera, imageQuality: 50)
-  //       .then((value) {
-  //     if (value != null) {
-  //       _cropImage(File(value.path));
-  //     }
-  //   });
-  // }
-
-  // _cropImage(
-  //   File imgFile,
-  // ) async {
-  //   final croppedFile = await ImageCropper().cropImage(
-  //       sourcePath: imgFile.path,
-  //       aspectRatioPresets: Platform.isAndroid
-  //           ? [
-  //               CropAspectRatioPreset.square,
-  //               CropAspectRatioPreset.ratio3x2,
-  //               CropAspectRatioPreset.original,
-  //               CropAspectRatioPreset.ratio4x3,
-  //               CropAspectRatioPreset.ratio16x9
-  //             ]
-  //           : [
-  //               CropAspectRatioPreset.original,
-  //               CropAspectRatioPreset.square,
-  //               CropAspectRatioPreset.ratio3x2,
-  //               CropAspectRatioPreset.ratio4x3,
-  //               CropAspectRatioPreset.ratio5x3,
-  //               CropAspectRatioPreset.ratio5x4,
-  //               CropAspectRatioPreset.ratio7x5,
-  //               CropAspectRatioPreset.ratio16x9
-  //             ],
-  //       uiSettings: [
-  //         AndroidUiSettings(
-  //             toolbarTitle: "Image Cropper",
-  //             toolbarColor: Colors.deepOrange,
-  //             toolbarWidgetColor: Colors.white,
-  //             initAspectRatio: CropAspectRatioPreset.original,
-  //             lockAspectRatio: false),
-  //         IOSUiSettings(
-  //           title: "Image Cropper",
-  //         )
-  //       ]);
-  //   if (croppedFile != null) {
-  //     imageCache.clear();
-  //     setState(() {
-  //       imageFile2 = File(croppedFile.path);
-  //     });
-  //     // reload();
-  //   }
-  // }
-
   final picker = ImagePicker();
 
   void showImagePicker(BuildContext context) {
@@ -2282,6 +2228,88 @@ class _MyFormState extends State<MyForm> {
           );
         });
   }
+
+  Future<File> saveImage(Uint8List imageBytes) async {
+    final directory = await getApplicationDocumentsDirectory();
+    final imagePath = '${directory.path}/image.jpg';
+    final imageFile = File(imagePath);
+    await imageFile.writeAsBytes(imageBytes);
+    return imageFile;
+  }
+  // Future<File> saveImage(Uint8List imageBytes) async {
+  //   final directory = await getApplicationDocumentsDirectory();
+  //   final imagePath = '${directory.path}/image.jpg';
+  //   final imageFile = File(imagePath);
+  //   await imageFile.writeAsBytes(imageBytes);
+  //   return imageFile;
+  // }
+  // Future<void> saveImage(Uint8List imageBytes) async {
+  //   final directory = await getApplicationDocumentsDirectory();
+  //   final imagePath = '${directory.path}/image.jpg';
+  //   final compressedBytes = await FlutterImageCompress.compressWithList(
+  //     imageBytes,
+  //     minHeight: 1920,
+  //     minWidth: 1080,
+  //     quality: 80,
+  //     format: CompressFormat.jpeg,
+  //   );
+  //   File(imagePath).writeAsBytesSync(compressedBytes);
+  //   print('Image saved at: $imagePath');
+  //   print("NAvnettttttt");
+  //   // final image = MemoryImage(imageBytes);
+  //   // showDialog(
+  //   //   context: context,
+  //   //   builder: (BuildContext context) {
+  //   //     return AlertDialog(
+  //   //       content: Image(image: image),
+  //   //     );
+  //   //   },
+  //   // );
+  // }
+
+  pickImage(ImageSource imageType) async {
+    try {
+      final photo = await ImagePicker().pickImage(source: imageType);
+      if (photo == null) return;
+      final tempImage = File(photo.path);
+      setState(() {
+        imageFile2 = tempImage;
+      });
+
+      Get.back();
+    } catch (error) {
+      debugPrint(error.toString());
+    }
+  }
+}
+
+Widget listTile({String? title, icon, Function()? callback}) {
+  return ListTile(
+    onTap: callback,
+    title: Text(
+      '$title',
+      style: GoogleFonts.poppins(fontWeight: FontWeight.w300, fontSize: 18),
+    ),
+    leading: Icon(
+      icon,
+      color: Coloors.fontcolor,
+    ),
+  );
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   // _imgFromGallery2() async {
   //   await picker.pickImage(source: ImageSource.gallery).then((value) {
@@ -2413,33 +2441,66 @@ class _MyFormState extends State<MyForm> {
   //     ),
   //   );
   // }
+  
+  // _imgFromGallery() async {
+  //   await picker2
+  //       .pickImage(source: ImageSource.gallery, imageQuality: 50)
+  //       .then((value) {
+  //     if (value != null) {
+  //       _cropImage(File(value.path));
+  //     }
+  //   });
+  // }
 
-  pickImage(ImageSource imageType) async {
-    try {
-      final photo = await ImagePicker().pickImage(source: imageType);
-      if (photo == null) return;
-      final tempImage = File(photo.path);
-      setState(() {
-        imageFile2 = tempImage;
-      });
+  // _imgFromCamera() async {
+  //   await picker2
+  //       .pickImage(source: ImageSource.camera, imageQuality: 50)
+  //       .then((value) {
+  //     if (value != null) {
+  //       _cropImage(File(value.path));
+  //     }
+  //   });
+  // }
 
-      Get.back();
-    } catch (error) {
-      debugPrint(error.toString());
-    }
-  }
-}
-
-Widget listTile({String? title, icon, Function()? callback}) {
-  return ListTile(
-    onTap: callback,
-    title: Text(
-      '$title',
-      style: GoogleFonts.poppins(fontWeight: FontWeight.w300, fontSize: 18),
-    ),
-    leading: Icon(
-      icon,
-      color: Coloors.fontcolor,
-    ),
-  );
-}
+  // _cropImage(
+  //   File imgFile,
+  // ) async {
+  //   final croppedFile = await ImageCropper().cropImage(
+  //       sourcePath: imgFile.path,
+  //       aspectRatioPresets: Platform.isAndroid
+  //           ? [
+  //               CropAspectRatioPreset.square,
+  //               CropAspectRatioPreset.ratio3x2,
+  //               CropAspectRatioPreset.original,
+  //               CropAspectRatioPreset.ratio4x3,
+  //               CropAspectRatioPreset.ratio16x9
+  //             ]
+  //           : [
+  //               CropAspectRatioPreset.original,
+  //               CropAspectRatioPreset.square,
+  //               CropAspectRatioPreset.ratio3x2,
+  //               CropAspectRatioPreset.ratio4x3,
+  //               CropAspectRatioPreset.ratio5x3,
+  //               CropAspectRatioPreset.ratio5x4,
+  //               CropAspectRatioPreset.ratio7x5,
+  //               CropAspectRatioPreset.ratio16x9
+  //             ],
+  //       uiSettings: [
+  //         AndroidUiSettings(
+  //             toolbarTitle: "Image Cropper",
+  //             toolbarColor: Colors.deepOrange,
+  //             toolbarWidgetColor: Colors.white,
+  //             initAspectRatio: CropAspectRatioPreset.original,
+  //             lockAspectRatio: false),
+  //         IOSUiSettings(
+  //           title: "Image Cropper",
+  //         )
+  //       ]);
+  //   if (croppedFile != null) {
+  //     imageCache.clear();
+  //     setState(() {
+  //       imageFile2 = File(croppedFile.path);
+  //     });
+  //     // reload();
+  //   }
+  // }

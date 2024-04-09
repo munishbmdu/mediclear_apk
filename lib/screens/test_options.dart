@@ -709,14 +709,9 @@ class _TestScreenState extends State<TestScreen> {
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) =>
-                          // ImageGuessing(
-                          //   medical_id: '',
-                          // ),
-                          // ImageGuessing(medical_id: '132'),
+
                           // VertigoTest(),
-                          //     VisualTest(
-                          //   medical_id: '135',
-                          // ),
+
                           MyForm(),
                       //     HearingTestGraphSCreen(
                       //   medical_id: "",

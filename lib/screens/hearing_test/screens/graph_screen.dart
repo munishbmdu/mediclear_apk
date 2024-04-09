@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:auto_orientation/auto_orientation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -56,10 +57,12 @@ class _HearingTestGraphSCreenState extends State<HearingTestGraphSCreen> {
   String _test_type_id = '1';
 
   //
-  String _hearingApi = 'https://qbacp.com/mediclear/api/hearingdata';
+  String _hearingApi = 'https://qbacp.com/mediclear/api/hearingtest';
 
   Future<void> sendDataToApi(String leftside, String rightside,
       String medical_details_id, String test_type_id) async {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    var token = pref.getString("token");
     try {
       var response = await http.post(
         Uri.parse(_hearingApi),
@@ -69,9 +72,18 @@ class _HearingTestGraphSCreenState extends State<HearingTestGraphSCreen> {
           'medical_details_id': widget.medical_id,
           'test_type_id': test_type_id
         },
+        // headers: ({
+        //   'Content-Type': 'application/json; charset=UTF-8',
+        //   'Authorization': 'Bearer $token'
+        // }),
       );
-
       print('Response body: ${response.body}');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Result submitted'),
+          duration: Duration(seconds: 3),
+        ),
+      );
     } catch (e) {
       print('Error sending data to API: $e');
     }
@@ -206,16 +218,15 @@ class _HearingTestGraphSCreenState extends State<HearingTestGraphSCreen> {
   void initState() {
     super.initState();
     _initPrefs();
+    AutoOrientation.landscapeAutoMode();
   }
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.landscapeLeft,
-      DeviceOrientation.landscapeRight,
-    ]);
-
-    // ignore: deprecated_member_use
+    // SystemChrome.setPreferredOrientations([
+    //   DeviceOrientation.landscapeLeft,
+    //   DeviceOrientation.landscapeRight,
+    // ]);
     return WillPopScope(
       onWillPop: () async {
         Navigator.pushReplacement(
@@ -500,34 +511,25 @@ class _HearingTestGraphSCreenState extends State<HearingTestGraphSCreen> {
                         width: 95,
                         child: ElevatedButton(
                           onPressed: () {
-                            SystemChrome.setPreferredOrientations([
-                              DeviceOrientation.portraitUp,
-                              DeviceOrientation.portraitDown,
-                            ]);
-
                             sendDataToApi(_leftside, _rightside,
                                 _medical_details_id, _test_type_id);
 
-                            //     .then((_) {
-                            //   // Reset to portrait mode after navigating away from the landscape screen
-                            //   SystemChrome.setPreferredOrientations([
-                            //     DeviceOrientation.portraitUp,
-                            //     DeviceOrientation.portraitDown,
-                            //   ]);
-                            // });
-
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('Result submitted'),
-                                duration: Duration(seconds: 3),
-                              ),
-                            );
-
                             Future.delayed(Duration(seconds: 3), () {
-                              Navigator.of(context)
-                                  .pushReplacement(MaterialPageRoute(
-                                builder: (context) => VertigoTest(),
-                              ));
+                              setState(() {
+                                Navigator.of(context)
+                                        .pushReplacement(MaterialPageRoute(
+                                  builder: (context) => VertigoTest(
+                                    id: widget.medical_id,
+                                  ),
+                                ))
+                                    //     .then((value) {
+                                    //   SystemChrome.setPreferredOrientations([
+                                    //     DeviceOrientation.portraitUp,
+                                    //     DeviceOrientation.portraitDown,
+                                    //   ]);
+                                    // })
+                                    ;
+                              });
                             });
                           },
                           style: ElevatedButton.styleFrom(

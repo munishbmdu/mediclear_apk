@@ -130,7 +130,7 @@ class _ImageGuessingState extends State<ImageGuessing> {
       'test_type_id': 1,
     };
     getEyeTest(value);
-    // Navigate to the next screen after some delay
+
     Future.delayed(Duration(seconds: 5), () {
       Navigator.pushReplacement(
         context,

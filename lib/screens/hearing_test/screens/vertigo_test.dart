@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:auto_orientation/auto_orientation.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -72,6 +73,12 @@ class _VertigoTestState extends State<VertigoTest> {
     } else {
       Text("Something went wrong");
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    AutoOrientation.portraitAutoMode();
   }
 
   @override
@@ -479,40 +486,97 @@ class _VertigoTestState extends State<VertigoTest> {
                             ),
                           );
                   }),
-              widget.val4 == null
-                  ? Container(
-                      width: 280,
-                      child: CustomTextButton(
-                        text: "Hearing Test",
-                        onTap: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => IndicatorWithScreens(
-                                      medical_id: widget.id,
-                                    )),
+              FutureBuilder(
+                  future: test_button_validation("hearingtest"),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData || snapshot.hasError)
+                      return Container(
+                        width: 280,
+                        child: CustomTextButton(
+                          text: " Hearing Test",
+                          colorr: Colors.white,
+                          onTap: () {},
+                        ),
+                      );
+                    return snapshot.data == 0
+                        ? Container(
+                            width: 280,
+                            child: CustomTextButton(
+                              text: "Hearing Test",
+                              onTap: () {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          IndicatorWithScreens(
+                                            medical_id: widget.id,
+                                          )),
+                                );
+                              },
+                            ),
+                          )
+                        : Container(
+                            width: 280,
+                            child: CustomTextButton(
+                              text: "Hearing Test",
+                              colorr: Coloors.fontcolor,
+                              fontcolor: Colors.white,
+                              onTap: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        content: Container(
+                                          height: 140,
+                                          child: Center(
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  "You have completed this test. Please contact to our team for performing this test again.",
+                                                  softWrap: true,
+                                                  maxLines: 3,
+                                                  textAlign: TextAlign.center,
+                                                  style:
+                                                      TextStyle(fontSize: 16),
+                                                ),
+                                                SizedBox(
+                                                  height: 20,
+                                                ),
+                                                ElevatedButton(
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                            backgroundColor:
+                                                                Coloors
+                                                                    .fontcolor),
+                                                    child: Text(
+                                                      "Ok",
+                                                      style: TextStyle(
+                                                          color: Colors.white),
+                                                    ))
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    });
+                                // setState(() {});
+                                // Navigator.pushReplacement(
+                                //   context,
+                                //   MaterialPageRoute(
+                                //       builder: (context) =>
+                                //           IndicatorWithScreens(
+                                //             medical_id: widget.id,
+                                //           )),
+                                // );
+                              },
+                            ),
                           );
-                        },
-                      ),
-                    )
-                  : Container(
-                      width: 280,
-                      child: CustomTextButton(
-                        text: "Hearing Test",
-                        colorr: Colors.grey,
-                        onTap: () {
-                          setState(() {});
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => IndicatorWithScreens(
-                                      medical_id: widget.id,
-                                    )),
-                          );
-                        },
-                      ),
-                    ),
-
+                  }),
               FutureBuilder(
                   future: test_button_validation("flatfoot"),
                   builder: (context, snapshot) {

@@ -1,8 +1,6 @@
 // import 'package:flutter/material.dart';
 // import 'package:get/get.dart';
 
-
-
 // class historyView extends StatefulWidget {
 //   const historyView({super.key});
 //   @override
@@ -1325,7 +1323,6 @@
 
 //                     ]),
 
-
 //               ]
 //           ),
 //         ],
@@ -2394,7 +2391,6 @@
 
 //                     ]),
 
-
 //               ]
 //           ),
 //         ],
@@ -2470,9 +2466,6 @@
 //     ],
 //   );
 // }
-
-
-
 
 // Widget customtextformfield({
 //   bool ? obsure,
@@ -2573,7 +2566,6 @@
 //   );
 // }
 
-
 // class GradientText extends StatelessWidget {
 //   const GradientText(
 //      {
@@ -2597,10 +2589,9 @@
 //   }
 // }
 
-
 // Container customAppBar(String title) {
 //   return Container(
-   
+
 //     color: Colors.transparent,
 //     child: Row(
 //       // crossAxisAlignment: CrossAxisAlignment.end,
@@ -2631,11 +2622,10 @@
 //           gradient: appcolor.gradient,
 //         ),
 //       ],
-      
+
 //     ),
 //   );
 // }
-
 
 import 'package:flutter/material.dart';
 
@@ -2643,12 +2633,11 @@ class TextHistory extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Test History'),
-          centerTitle: true,
-        ),
-        body: LabReportsTable(),
-    
+      appBar: AppBar(
+        title: Text('Test History'),
+        centerTitle: true,
+      ),
+      body: LabReportsTable(),
     );
   }
 }
@@ -2659,7 +2648,11 @@ class LabReport {
   final String test;
   final String report;
 
-  LabReport({required this.date, required this.batchNo, required this.test, required this.report});
+  LabReport(
+      {required this.date,
+      required this.batchNo,
+      required this.test,
+      required this.report});
 }
 
 class LabReportsTable extends StatefulWidget {
@@ -2676,8 +2669,13 @@ class _LabReportsTableState extends State<LabReportsTable> {
   void initState() {
     super.initState();
     labReports = [
-      LabReport(date: '2023-01-01', batchNo: 'B123', test: 'Hearing Test', report: 'Pending'),
-      LabReport(date: '2023-02-15', batchNo: 'B124', test: 'Romberg', report: 'View'),
+      LabReport(
+          date: '2023-01-01',
+          batchNo: 'B123',
+          test: 'Hearing Test',
+          report: 'Pending'),
+      LabReport(
+          date: '2023-02-15', batchNo: 'B124', test: 'Romberg', report: 'View'),
       // Add more lab reports as needed
     ];
 
@@ -2718,13 +2716,15 @@ class _LabReportsTableState extends State<LabReportsTable> {
             scrollDirection: Axis.horizontal,
             child: Container(
               decoration: BoxDecoration(
-                border: Border(bottom: BorderSide(width: 1.0, color: Colors.black)),
+                border:
+                    Border(bottom: BorderSide(width: 1.0, color: Colors.black)),
               ),
               child: Row(
                 children: [
                   Container(
                     width: 100.0,
-                    padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
                     child: Text(
                       'Date',
                       style: TextStyle(fontWeight: FontWeight.bold),
@@ -2732,7 +2732,8 @@ class _LabReportsTableState extends State<LabReportsTable> {
                   ),
                   Container(
                     width: 100.0,
-                    padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
                     child: Text(
                       'Batch No',
                       style: TextStyle(fontWeight: FontWeight.bold),
@@ -2740,7 +2741,8 @@ class _LabReportsTableState extends State<LabReportsTable> {
                   ),
                   Container(
                     width: 100.0,
-                    padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
                     child: Text(
                       'Test',
                       style: TextStyle(fontWeight: FontWeight.bold),
@@ -2748,7 +2750,8 @@ class _LabReportsTableState extends State<LabReportsTable> {
                   ),
                   Container(
                     width: 100.0,
-                    padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
                     child: Text(
                       'Report',
                       style: TextStyle(fontWeight: FontWeight.bold),
@@ -2767,28 +2770,33 @@ class _LabReportsTableState extends State<LabReportsTable> {
                   filteredReports.length,
                   (index) => Container(
                     decoration: BoxDecoration(
-                      border: Border(bottom: BorderSide(width: 1.0, color: Colors.black)),
+                      border: Border(
+                          bottom: BorderSide(width: 1.0, color: Colors.black)),
                     ),
                     child: Row(
                       children: [
                         Container(
                           width: 100.0,
-                          padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 8.0, vertical: 12.0),
                           child: Text(filteredReports[index].date),
                         ),
                         Container(
                           width: 100.0,
-                          padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 8.0, vertical: 12.0),
                           child: Text(filteredReports[index].batchNo),
                         ),
                         Container(
                           width: 100.0,
-                          padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 8.0, vertical: 12.0),
                           child: Text(filteredReports[index].test),
                         ),
                         Container(
                           width: 100.0,
-                          padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 8.0, vertical: 12.0),
                           child: Text(filteredReports[index].report),
                         ),
                       ],
@@ -2803,4 +2811,3 @@ class _LabReportsTableState extends State<LabReportsTable> {
     );
   }
 }
-
