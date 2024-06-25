@@ -180,7 +180,7 @@ class _FakudaUnterbergerTestScreen2State extends State<FakudaUnterbergerTestScre
 
    //var images= File('image.jpg').writeAsBytes(_signatureBytes!);
   
-    var uri = Uri.parse('https://qbacp.com/mediclear/api/fukuda'); // Replace with your server's endpoint
+    var uri = Uri.parse('https://bmdublog.com/mediclear/api/fukuda'); // Replace with your server's endpoint
     var request = http.MultipartRequest("POST", uri);
         //..files.add(await http.MultipartFile.fromPath('consumer_profile_image', imageFile!.path));
       

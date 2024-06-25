@@ -33,7 +33,7 @@ class _LoginOptionsToggleButtonState extends State<LoginOptionsToggleButton> {
   Future getCorporateLogin(Object value, String url) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final response = await http.post(
-        Uri.parse("https://qbacp.com/mediclear/api/Corporate/login"),
+        Uri.parse("https://bmdublog.com/mediclear/api/Corporate/login"),
         body: jsonEncode(value),
         headers: ({"Content-Type": "application/json; charset=UTF-8"}));
     print(value);
@@ -57,7 +57,7 @@ class _LoginOptionsToggleButtonState extends State<LoginOptionsToggleButton> {
     print("get is still calling");
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final response = await http.post(
-        Uri.parse("https://qbacp.com/mediclear/api/Customer/login"),
+        Uri.parse("https://bmdublog.com/mediclear/api/Customer/login"),
         body: jsonEncode(value),
         headers: ({"Content-Type": "application/json; charset=UTF-8"}));
     print(value);

@@ -64,10 +64,10 @@ class _CertificatePageState extends State<CertificatePage> {
                           minRadius: 40,
                           backgroundImage: profile_pic != null
                               ? NetworkImage(
-                                  "https://qbacp.com/mediclear/public/images/" +
+                                  "https://bmdublog.com/mediclear/public/images/" +
                                       profile_pic)
                               : NetworkImage(
-                                  "https://qbacp.com/mediclear/public/images" +
+                                  "https://bmdublog.com/mediclear/public/images" +
                                       profile_pic),
                         )
                       ],
@@ -365,7 +365,7 @@ class _CertificatePageState extends State<CertificatePage> {
   }
 
   Future<void> sendDataToApi() async {
-    String url = 'https://qbacp.com/mediclear/api/get-report';
+    String url = 'https://bmdublog.com/mediclear/api/get-report';
     String data = widget.certificate;
 
     try {
@@ -418,7 +418,7 @@ class _CertificatePageState extends State<CertificatePage> {
   }
 
   // Future<void> _sendDataToAPI(String data) async {
-  //   final url = Uri.parse('https://qbacp.com/mediclear/api/get-report');
+  //   final url = Uri.parse('https://bmdublog.com/mediclear/api/get-report');
   //   final response = await http.post(
   //     url,
   //     body: jsonEncode({'certification': data}),

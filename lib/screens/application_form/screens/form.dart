@@ -1976,7 +1976,7 @@ class _MyFormState extends State<MyForm> {
     //var images= File('image.jpg').writeAsBytes(_signatureBytes!);
 
     var uri = Uri.parse(
-        'https://qbacp.com/mediclear/api/add-consumer-medical-details'); // Replace with your server's endpoint
+        'https://bmdublog.com/mediclear/api/add-consumer-medical-details'); // Replace with your server's endpoint
     var request = http.MultipartRequest("POST", uri);
     //..files.add(await http.MultipartFile.fromPath('consumer_profile_image', imageFile!.path));
 

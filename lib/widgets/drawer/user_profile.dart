@@ -136,7 +136,7 @@ class _User_Profile extends State<User_Profile> {
                                         width: 120,
                                       ))
                             // // //   child:(snapshot.data['customer_profile_image']!="customer profile not updated")?Image.network(snapshot.data['customer_profile_image'],):Icon(Icons.person),
-                            //   child: snapshot.data['customer_profile_image'].toString()!="https://qbacp.com/mediclear/" ? Image.network(snapshot.data['customer_profile_image']!.toString()):Icon(Icons.person),
+                            //   child: snapshot.data['customer_profile_image'].toString()!="https://bmdublog.com/mediclear/" ? Image.network(snapshot.data['customer_profile_image']!.toString()):Icon(Icons.person),
                             // backgroundImage: SelectedImage ==null ? Image(image: Image.file(SelectedImage!),):Icon(Icons.person) ,
                             );
                       }),

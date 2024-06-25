@@ -235,7 +235,7 @@ class _DetailsScreenForRegisterCustomersState extends State<DetailsScreenForRegi
     };
 
     final response = await http.post(
-      Uri.parse("https://qbacp.com/mediclear/api/all-consumer-data"),
+      Uri.parse("https://bmdublog.com/mediclear/api/all-consumer-data"),
       body: jsonEncode(data),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
@@ -263,7 +263,7 @@ class _DetailsScreenForRegisterCustomersState extends State<DetailsScreenForRegi
 
    
     final response = await http.post(
-      Uri.parse("https://qbacp.com/mediclear/api/consumer-medical-data-delete"),
+      Uri.parse("https://bmdublog.com/mediclear/api/consumer-medical-data-delete"),
       body: jsonEncode(value),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
@@ -304,7 +304,7 @@ class _DetailsScreenForRegisterCustomersState extends State<DetailsScreenForRegi
     };
 
     final response = await http.post(
-      Uri.parse("https://qbacp.com/mediclear/api/forbiddenlity-add-consumer"),
+      Uri.parse("https://bmdublog.com/mediclear/api/forbiddenlity-add-consumer"),
       body: jsonEncode(data),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',

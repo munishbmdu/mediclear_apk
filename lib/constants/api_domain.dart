@@ -8,7 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
 class ApiDomain{
- String url="https://qbacp.com/mediclear/api/";
+ String url="https://bmdublog.com/mediclear/api/";
   Future getProfileData()async{
     final SharedPreferences pref= await SharedPreferences.getInstance();
     var token=pref.getString("token");

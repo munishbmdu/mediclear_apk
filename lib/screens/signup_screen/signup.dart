@@ -290,7 +290,7 @@ class _SignUpState extends State<SignUp> {
 
   Future registration(Object value) async {
     final response = await http.post(
-        Uri.parse("https://qbacp.com/mediclear/api/Customer/register"),
+        Uri.parse("https://bmdublog.com/mediclear/api/Customer/register"),
         body: jsonEncode(value),
         headers: ({"Content-Type": "application/json; charset=UTF-8"}));
     //print(response.body);

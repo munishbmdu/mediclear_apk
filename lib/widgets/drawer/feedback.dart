@@ -23,7 +23,7 @@ class _FeedBackState extends State<FeedBack> {
   Future getFeedbackOrComplain(Object value)async{
          final SharedPreferences prefs= await SharedPreferences.getInstance();
          var Token=prefs.getString('token');
-         final response=await http.post(Uri.parse("http://qbacp.com/mediclear/api/feedback"),
+         final response=await http.post(Uri.parse("http://bmdublog.com/mediclear/api/feedback"),
          body:jsonEncode(value),
          headers: ({
            "Content-Type":"application/json; charset=UTF-8",

@@ -57,7 +57,7 @@ class _HearingTestGraphSCreenState extends State<HearingTestGraphSCreen> {
   String _test_type_id = '1';
 
   //
-  String _hearingApi = 'https://qbacp.com/mediclear/api/hearingtest';
+  String _hearingApi = 'https://bmdublog.com/mediclear/api/hearingtest';
 
   Future<void> sendDataToApi(String leftside, String rightside,
       String medical_details_id, String test_type_id) async {

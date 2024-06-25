@@ -11,7 +11,7 @@ class FeqApi {
     String right_ear_fixed,
   ) async {
     try {
-      Uri url = Uri.parse('https://qbacp.com/mediclear/api/hearingdata');
+      Uri url = Uri.parse('https://bmdublog.com/mediclear/api/hearingdata');
 
       Map<String, dynamic> requestBody = {
         'left_ear_problem': left_ear_problem,

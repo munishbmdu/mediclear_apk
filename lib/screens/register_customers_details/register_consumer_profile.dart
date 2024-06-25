@@ -449,7 +449,7 @@ Future updatedetails(Object value)async{
                                      child: Image.network(img,fit: BoxFit.cover,width: 120,height: 130,),
                                    ):Image.file(File(imageFile2!.path,),fit: BoxFit.cover,height: 130,width: 120,)
                                 // // //   child:(snapshot.data['customer_profile_image']!="customer profile not updated")?Image.network(snapshot.data['customer_profile_image'],):Icon(Icons.person),
-                                                       //   child: snapshot.data['customer_profile_image'].toString()!="https://qbacp.com/mediclear/" ? Image.network(snapshot.data['customer_profile_image']!.toString()):Icon(Icons.person),
+                                                       //   child: snapshot.data['customer_profile_image'].toString()!="https://bmdublog.com/mediclear/" ? Image.network(snapshot.data['customer_profile_image']!.toString()):Icon(Icons.person),
                                                       // backgroundImage: SelectedImage ==null ? Image(image: Image.file(SelectedImage!),):Icon(Icons.person) ,
                               );
                             }

@@ -135,7 +135,7 @@ class _BppvTestScreen2State extends State<BppvTestScreen2> {
 
    //var images= File('image.jpg').writeAsBytes(_signatureBytes!);
   
-    var uri = Uri.parse('https://qbacp.com/mediclear/api/bppv'); // Replace with your server's endpoint
+    var uri = Uri.parse('https://bmdublog.com/mediclear/api/bppv'); // Replace with your server's endpoint
     var request = http.MultipartRequest("POST", uri);
         //..files.add(await http.MultipartFile.fromPath('consumer_profile_image', imageFile!.path));
       

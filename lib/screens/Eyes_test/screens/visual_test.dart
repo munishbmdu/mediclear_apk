@@ -48,7 +48,7 @@ class _VisualTest extends State<VisualTest> {
     final SharedPreferences pref = await SharedPreferences.getInstance();
     var token = pref.getString("token");
     final response = await http.post(
-      Uri.parse("https://qbacp.com/mediclear/api/eyedistance"),
+      Uri.parse("https://bmdublog.com/mediclear/api/eyedistance"),
       body: jsonEncode(object),
       headers: ({
         'Content-Type': 'application/json; charset=UTF-8',

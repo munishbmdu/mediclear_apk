@@ -751,7 +751,7 @@ class _TestScreenState extends State<TestScreen> {
   }
 
   Future<void> _sendDataToAPI(String data) async {
-    final url = Uri.parse('https://qbacp.com/mediclear/api/get-report');
+    final url = Uri.parse('https://bmdublog.com/mediclear/api/get-report');
     final response = await http.post(
       url,
       body: jsonEncode({'certification': data}),
